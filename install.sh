@@ -140,7 +140,9 @@ main() {
 
     local tmp
     tmp="$(mktemp -d)"
-    trap 'rm -rf "${tmp}"' EXIT
+    # Expanded now: the local variable is gone when the trap runs.
+    # shellcheck disable=SC2064
+    trap "rm -rf '${tmp}'" EXIT
     download "${tmp}" "${version}"
     install_from "${tmp}/rapidshot"
 }
