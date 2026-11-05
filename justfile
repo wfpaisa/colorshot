@@ -31,7 +31,7 @@ install: build icons
     install -Dm644 -t "${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions/rapidshot@wfelipe.com" extension/rapidshot@wfelipe.com/*
     -gnome-extensions enable rapidshot@wfelipe.com
 
-# Copia los SVG de la interfaz a la carpeta de iconos; se editan sin recompilar.
+# Instala los iconos propios de RapidShot (assets/icons) en ~/.local/share/rapidshot/icons
 icons:
     install -Dm644 -t "${XDG_DATA_HOME:-$HOME/.local/share}/rapidshot/icons" assets/icons/*/*.svg
 

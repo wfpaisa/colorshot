@@ -117,7 +117,7 @@ pub async fn capture_area(x: i32, y: i32, w: u32, h: u32) -> Result<Capture, Cap
                 Some("com.wfelipe.RapidShot"),
                 "/com/wfelipe/RapidShot",
                 Some("com.wfelipe.RapidShot"),
-                "Capture Area",
+                "Area",
                 &(x, y, w as i32, h as i32, name),
             )
             .await?;

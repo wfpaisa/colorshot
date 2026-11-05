@@ -19,10 +19,11 @@ use tokio::runtime::{Handle, Runtime};
 pub fn run(command: &Command, runtime: &Runtime) -> anyhow::Result<()> {
     match command {
         Command::Area => area(runtime),
-        Command::Full => full(runtime),
+        Command::Full => full(runtime, Settings::load().screen_capture),
+        // Tras la cuenta no se elige nada: se toma el monitor del puntero.
         Command::Delayed => {
             std::thread::sleep(std::time::Duration::from_secs(3));
-            full(runtime)
+            full(runtime, ScreenCapture::Cursor)
         }
         Command::Repeat => repeat(runtime),
         Command::Window => window(runtime),
@@ -379,10 +380,9 @@ pub fn notify_result(found: &Recognized) -> anyhow::Result<&'static str> {
 
 /// Con un monitor o «All screens», todo el escritorio; si no, el monitor del puntero o el
 /// que se pulse, capturado con las ventanas del selector ya vacías.
-fn full(runtime: &Runtime) -> anyhow::Result<()> {
+fn full(runtime: &Runtime, mode: ScreenCapture) -> anyhow::Result<()> {
     let started = std::time::Instant::now();
     let warm = Warm::start();
-    let mode = Settings::load().screen_capture;
     let screens = screens(runtime);
     if screens.len() > 1 && mode != ScreenCapture::All {
         let selectors = screens

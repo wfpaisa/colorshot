@@ -171,10 +171,18 @@ impl Preview {
                 action = Some(command);
             }
         }
+        // El borde de las demás ventanas (`frame::finish`): un píxel del fondo y el brillo
+        // dentro, para que la miniatura se distinga sobre un escritorio del mismo color.
         painter.rect_stroke(
-            card.shrink(0.5),
+            card,
             RADIUS,
-            egui::Stroke::new(1., egui::Color32::from_white_alpha(28)),
+            egui::Stroke::new(1., Tokens::BAR),
+            egui::StrokeKind::Inside,
+        );
+        painter.rect_stroke(
+            card.shrink(1.),
+            RADIUS - 1.,
+            egui::Stroke::new(1., crate::theme::Gnome::new(true).highlight),
             egui::StrokeKind::Inside,
         );
         action
