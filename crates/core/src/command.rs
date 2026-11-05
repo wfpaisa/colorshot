@@ -30,7 +30,7 @@ pub enum Command {
     Quit,
 }
 
-pub const USAGE: &str = "Usage: rapidshot [area | full | window | ocr | color | palettes | repeat | delayed | clipboard | open | prefs | edit <file> | pin <file> | quit]";
+pub const USAGE: &str = "Usage: rapidshot [area | full | window | ocr | color | palettes | repeat | delayed | clipboard | open | prefs | edit <file> | pin <file> | quit | --version]";
 
 impl Command {
     pub fn parse(args: &[String]) -> Option<Self> {

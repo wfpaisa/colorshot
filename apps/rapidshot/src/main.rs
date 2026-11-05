@@ -10,6 +10,10 @@ fn main() -> anyhow::Result<()> {
     env_logger::init();
     rapidshot_core::i18n::set(rapidshot_core::settings::Settings::load().language);
     let args: Vec<_> = std::env::args().skip(1).collect();
+    if matches!(args.as_slice(), [flag] if flag == "--version" || flag == "-V") {
+        println!("rapidshot {}", env!("CARGO_PKG_VERSION"));
+        return Ok(());
+    }
     let Some(command) = Command::parse(&args) else {
         anyhow::bail!(USAGE);
     };

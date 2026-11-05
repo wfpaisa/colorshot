@@ -57,13 +57,13 @@
 
 ## Install
 
+Install or update to the latest release (x86_64, no root needed):
+
 ```bash
-git clone git@github.com:wfpaisa/rapidshot.git
-cd rapidshot
-just install
+curl -fsSL https://raw.githubusercontent.com/wfpaisa/rapidshot/main/install.sh | bash
 ```
 
-This builds a release binary and installs:
+It installs:
 
 - `~/.local/bin/rapidshot`
 - the launcher and its icon (`~/.local/share/applications/rapidshot.desktop`)
@@ -72,6 +72,19 @@ This builds a release binary and installs:
 
 Log out and back in once so GNOME loads the extension. It is needed for **Capture Window**,
 for drawing the selector over the top bar and for capturing only the chosen area.
+
+Pick a version with `bash -s -- --version v0.1.0`, or remove everything with
+`bash -s -- --uninstall` (your settings in `~/.config/rapidshot` are kept). You can also
+download the archive from [Releases](https://github.com/wfpaisa/rapidshot/releases), extract it
+and run `./install.sh`.
+
+### From source
+
+```bash
+git clone https://github.com/wfpaisa/rapidshot.git
+cd rapidshot
+just install
+```
 
 ## Usage
 
@@ -86,7 +99,7 @@ CLI:
 
 ```text
 rapidshot [area | full | window | ocr | color | palettes | repeat | delayed |
-           clipboard | open | prefs | edit <file> | pin <file> | quit]
+           clipboard | open | prefs | edit <file> | pin <file> | quit | --version]
 ```
 
 | Default shortcut | Action |
@@ -108,6 +121,7 @@ Settings live in `~/.config/rapidshot/`.
 just dev area   # run a debug build with any subcommand
 just test       # cargo test
 just lint       # rustfmt + clippy
+just release    # portable build in Docker, packaged in dist/
 ```
 
 The workspace is split into `crates/core` (capture, settings, image, clipboard, OCR),
