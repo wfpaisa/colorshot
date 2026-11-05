@@ -132,6 +132,14 @@ The interface icons are SVGs in `assets/icons/`; after editing one, run `just ic
 restart the app, no rebuild needed. The logo (`assets/logo.svg`) is embedded in the binary, so
 it needs `just install`.
 
+
+## Relelease
+
+First commit and push to github all.
+```sh
+./release.sh 1.0.1
+``` 
+
 ## License
 
 [MIT](LICENSE)
