@@ -1,0 +1,264 @@
+# en	es	pt	fr	de	ru	zh	ja — `\n` es un salto de línea.
+Reading text / QR	Leyendo texto / QR	Lendo texto / QR	Lecture du texte / QR	Text / QR wird gelesen	Чтение текста / QR	正在读取文字 / QR	テキスト / QR を読み取り中
+Display points account for screen scaling. Press P to switch units.	Los puntos tienen en cuenta la escala de pantalla. Pulsa P para cambiar de unidad.	Os pontos consideram a escala da tela. Pressione P para mudar a unidade.	Les points tiennent compte de l’échelle de l’écran. Appuyez sur P pour changer d’unité.	Punkte berücksichtigen die Bildschirmskalierung. P wechselt die Einheit.	Точки учитывают масштаб экрана. Нажмите P для смены единиц.	显示点考虑屏幕缩放。按 P 切换单位。	ポイントは画面の拡大率を反映します。P で単位を切り替えます。
+Flattens annotations	Combina las anotaciones con la imagen	Mescla as anotações com a imagem	Fusionne les annotations avec l’image	Verbindet Anmerkungen mit dem Bild	Объединяет аннотации с изображением	将标注合并到图像	注釈を画像に統合
+1 image · {}	1 imagen · {}	1 imagem · {}	1 image · {}	1 Bild · {}	1 изображение · {}	1 张图片 · {}	1 枚の画像 · {}
+A  all screens   ·   Esc  cancel	A  todas las pantallas   ·   Esc  cancelar	A  todas as telas   ·   Esc  cancelar	A  tous les écrans   ·   Échap  annuler	A  alle Bildschirme   ·   Esc  abbrechen	A  все экраны   ·   Esc  отмена	A  所有屏幕   ·   Esc  取消	A  すべての画面   ·   Esc  キャンセル
+Actual Size	Tamaño real	Tamanho real	Taille réelle	Originalgröße	Реальный размер	实际大小	実際のサイズ
+Add to GNOME	Añadir a GNOME	Adicionar ao GNOME	Ajouter à GNOME	Zu GNOME hinzufügen	Добавить в GNOME	添加到 GNOME	GNOME に追加
+Added	Añadido	Adicionado	Ajouté	Hinzugefügt	Добавлено	已添加	追加済み
+Advanced	Avanzado	Avançado	Avancé	Erweitert	Дополнительно	高级	詳細
+After area capture, open	Tras capturar un área, abrir	Após capturar uma área, abrir	Après une capture de zone, ouvrir	Nach Bereichsaufnahme öffnen	После снимка области открыть	区域截图后打开	範囲キャプチャ後に開く
+After capture	Después de capturar	Após a captura	Après la capture	Nach der Aufnahme	После снимка	截图后	キャプチャ後
+After {} seconds	A los {} segundos	Após {} segundos	Après {} secondes	Nach {} Sekunden	Через {} с	{} 秒后	{} 秒後
+All	Todos	Todos	Tous	Alle	Все	全部	すべて
+Always on {}	Siempre en {}	Sempre em {}	Toujours sur {}	Immer auf {}	Всегда на {}	始终在 {}	常に {}
+Capture Area	Capturar área	Área	Zone	Bereich	Область	区域	範囲
+Arrow (A)	Flecha (A)	Seta (A)	Flèche (A)	Pfeil (A)	Стрелка (A)	箭头 (A)	矢印 (A)
+Auto	Auto	Auto	Auto	Auto	Авто	自动	自動
+Auto uses JPEG for photo-like captures	Auto usa JPEG en capturas tipo foto	Auto usa JPEG em capturas tipo foto	Auto utilise JPEG pour les captures photographiques	Auto nutzt JPEG für fotoähnliche Aufnahmen	«Авто» сохраняет похожие на фото снимки в JPEG	自动：类似照片的截图使用 JPEG	自動：写真のようなキャプチャは JPEG
+Autoadjust	Autoajustar	Autoajustar	Ajuster auto	Automatisch anpassen	Автоподгонка	自动调整	自動調整
+Autoadjust (A)	Autoajustar (A)	Autoajustar (A)	Ajuster auto (A)	Automatisch anpassen (A)	Автоподгонка (A)	自动调整 (A)	自動調整 (A)
+Reset shortcut	Restablecer atajo	Voltar ao padrão	Revenir à la valeur par défaut	Auf Standard zurücksetzen	Вернуть по умолчанию	恢复默认	デフォルトに戻す
+Blur	Desenfocar	Desfocar	Flou	Weichzeichnen	Размытие	模糊	ぼかし
+Blur/Erase (B)	Desenfocar/Borrar (B)	Desfocar/Apagar (B)	Flou/Effacer (B)	Weichzeichnen/Löschen (B)	Размытие/Стирание (B)	模糊/擦除 (B)	ぼかし/消去 (B)
+Capture Screen	Capturar pantalla	Capturar tela	Capturer l’écran	Bildschirm aufnehmen	Снимок экрана	截取屏幕	画面をキャプチャ
+Capture Window	Capturar ventana	Capturar janela	Capturer une fenêtre	Fenster aufnehmen	Снимок окна	截取窗口	ウィンドウをキャプチャ
+Choose	Elegir	Escolher	Choisir	Auswählen	Выбрать	选择	選択
+Click a monitor; press A for all of them	Haz clic en un monitor; A para todos	Clique em um monitor; A para todos	Cliquez sur un écran ; A pour tous	Monitor anklicken; A für alle	Щёлкните монитор; A — все	点击一个显示器；按 A 选择全部	モニターをクリック。A ですべて
+Click a shortcut to change it · Esc cancels	Clic en un atajo para cambiarlo · Esc cancela	Clique em um atalho para gravar outro · Esc cancela	Cliquez sur un raccourci pour en enregistrer un autre · Échap annule	Kürzel anklicken, um ein neues aufzunehmen · Esc bricht ab	Щёлкните сочетание, чтобы записать новое · Esc — отмена	点击快捷键以录制新的 · Esc 取消	ショートカットをクリックして新しく記録 · Esc で取消
+Click to capture this screen	Haz clic para capturar esta pantalla	Clique para capturar esta tela	Cliquez pour capturer cet écran	Klicken, um diesen Bildschirm aufzunehmen	Щёлкните, чтобы снять этот экран	点击截取此屏幕	クリックしてこの画面をキャプチャ
+Click to change · rapidshot {}	Clic para cambiar · rapidshot {}	Clique para alterar · rapidshot {}	Cliquez pour modifier · rapidshot {}	Klicken zum Ändern · rapidshot {}	Щёлкните, чтобы изменить · rapidshot {}	点击更改 · rapidshot {}	クリックで変更 · rapidshot {}
+Click to choose a folder · Right-click to reset	Clic para elegir carpeta · Clic derecho para restablecer	Clique para alterar; botão direito para a pasta padrão	Cliquez pour modifier ; clic droit pour le dossier par défaut	Klicken zum Ändern; Rechtsklick für den Standardordner	Щелчок — изменить; правый щелчок — папка по умолчанию	点击更改；右键使用默认文件夹	クリックで変更、右クリックで既定のフォルダー
+Click to edit	Clic para editar	Clique para editar	Cliquer pour modifier	Klicken zum Bearbeiten	Нажмите, чтобы редактировать	点击编辑	クリックして編集
+Close	Cerrar	Fechar	Fermer	Schließen	Закрыть	关闭	閉じる
+Close (Esc)	Cerrar (Esc)	Fechar (Esc)	Fermer (Échap)	Schließen (Esc)	Закрыть (Esc)	关闭 (Esc)	閉じる (Esc)
+Collapse	Plegar	Recolher	Replier	Einklappen	Свернуть	收起	折りたたむ
+Color	Color	Cor	Couleur	Farbe	Цвет	颜色	色
+Color copied	Color copiado	Cor copiada	Couleur copiée	Farbe kopiert	Цвет скопирован	已复制颜色	色をコピーしました
+Color Format	Formato de color	Formato de cor	Format de couleur	Farbformat	Формат цвета	颜色格式	カラー形式
+Color picker	Selector de color	Seletor de cor	Pipette	Farbwähler	Пипетка	取色器	カラーピッカー
+Copied	Copiado	Copiado	Copié	Kopiert	Скопировано	已复制	コピーしました
+Copied {}	Copiado {}	Copiado {}	Copié {}	Kopiert: {}	Скопировано: {}	已复制 {}	{} をコピーしました
+Copy	Copiar	Copiar	Copier	Kopieren	Копировать	复制	コピー
+Copy (Ctrl+C)	Copiar (Ctrl+C)	Copiar (Ctrl+C)	Copier (Ctrl+C)	Kopieren (Strg+C)	Копировать (Ctrl+C)	复制 (Ctrl+C)	コピー (Ctrl+C)
+Copy Average Color	Copiar color medio	Copiar cor média	Copier la couleur moyenne	Durchschnittsfarbe kopieren	Копировать средний цвет	复制平均颜色	平均色をコピー
+Copy command	Copiar comando	Copiar comando	Copier la commande	Befehl kopieren	Копировать команду	复制命令	コマンドをコピー
+Copy failed: {}	No se pudo copiar: {}	Falha ao copiar: {}	Échec de la copie : {}	Kopieren fehlgeschlagen: {}	Не удалось скопировать: {}	复制失败：{}	コピーに失敗しました: {}
+Copy Pixel Color	Copiar color del píxel	Copiar cor do pixel	Copier la couleur du pixel	Pixelfarbe kopieren	Копировать цвет пикселя	复制像素颜色	ピクセルの色をコピー
+Copy Text Color	Copiar color del texto	Copiar cor do texto	Copier la couleur du texte	Textfarbe kopieren	Копировать цвет текста	复制文字颜色	文字の色をコピー
+Copy to clipboard	Copiar al portapapeles	Copiar para a área de transferência	Copier dans le presse-papiers	In die Zwischenablage kopieren	Копировать в буфер обмена	复制到剪贴板	クリップボードにコピー
+Could not add shortcuts: {}	No se pudieron añadir los atajos: {}	Não foi possível adicionar os atalhos: {}	Impossible d’ajouter les raccourcis : {}	Kürzel konnten nicht hinzugefügt werden: {}	Не удалось добавить сочетания: {}	无法添加快捷键：{}	ショートカットを追加できません: {}
+Could not change autostart: {}	No se pudo cambiar el inicio automático: {}	Não foi possível alterar a inicialização automática: {}	Impossible de modifier le démarrage automatique : {}	Autostart konnte nicht geändert werden: {}	Не удалось изменить автозапуск: {}	无法更改自动启动：{}	自動起動を変更できません: {}
+Could not open the folder: {}	No se pudo abrir la carpeta: {}	Não foi possível abrir a pasta: {}	Impossible d’ouvrir le dossier : {}	Ordner konnte nicht geöffnet werden: {}	Не удалось открыть папку: {}	无法打开文件夹：{}	フォルダーを開けません: {}
+Could not read GNOME shortcuts: {}	No se pudieron leer los atajos de GNOME: {}	Não foi possível ler os atalhos do GNOME: {}	Impossible de lire les raccourcis GNOME : {}	GNOME-Kürzel konnten nicht gelesen werden: {}	Не удалось прочитать сочетания GNOME: {}	无法读取 GNOME 快捷键：{}	GNOME のショートカットを読み込めません: {}
+Could not remove the shortcut: {}	No se pudo quitar el atajo: {}	Não foi possível remover o atalho: {}	Impossible de supprimer le raccourci : {}	Kürzel konnte nicht entfernt werden: {}	Не удалось удалить сочетание: {}	无法移除快捷键：{}	ショートカットを削除できません: {}
+Could not save settings: {}	No se pudieron guardar los ajustes: {}	Não foi possível salvar as configurações: {}	Impossible d’enregistrer les réglages : {}	Einstellungen konnten nicht gespeichert werden: {}	Не удалось сохранить настройки: {}	无法保存设置：{}	設定を保存できません: {}
+Counter	Contador	Contador	Compteur	Zähler	Счётчик	计数器	カウンター
+Crop	Recortar	Cortar	Rogner	Zuschneiden	Обрезать	裁剪	切り抜き
+Crop (Enter)	Recortar (Enter)	Cortar (Enter)	Rogner (Entrée)	Zuschneiden (Enter)	Обрезать (Enter)	裁剪 (Enter)	切り抜き (Enter)
+Select (V)	Seleccionar (V)	Cortar/Selecionar (V)	Rogner/Sélectionner (V)	Zuschneiden/Auswählen (V)	Обрезка/Выделение (V)	裁剪/选择 (V)	切り抜き/選択 (V)
+Custom · default {}	Personalizado · predeterminado {}	Personalizado · padrão {}	Personnalisé · par défaut {}	Eigenes · Standard {}	Своё · по умолчанию {}	自定义 · 默认 {}	カスタム · 既定 {}
+Capture in 3 seconds	Capturar en 3 segundos	Com atraso (3 s)	Différée (3 s)	Verzögert (3 s)	С задержкой (3 с)	延时 (3 秒)	遅延 (3 秒)
+Delete all temporary captures	Borrar capturas temporales	Apagar todas	Tout supprimer	Alle löschen	Удалить все	全部删除	すべて削除
+Done	Listo	Pronto	Terminé	Fertig	Готово	完成	完了
+Done · {}	Listo · {}	Pronto · {}	Terminé · {}	Fertig · {}	Готово · {}	完成 · {}	完了 · {}
+Double	Doble	Dupla	Double	Doppelt	Двойная	双向	両方向
+Drag to move	Arrastra para mover	Arraste para mover	Faites glisser pour déplacer	Zum Verschieben ziehen	Перетащите, чтобы переместить	拖动以移动	ドラッグして移動
+Edit	Editar	Editar	Modifier	Bearbeiten	Изменить	编辑	編集
+Editor	Editor	Editor	Éditeur	Editor	Редактор	编辑器	エディター
+Erase	Borrar	Apagar	Effacer	Löschen	Стереть	擦除	消去
+Erase (Del)	Borrar (Supr)	Apagar (Del)	Effacer (Suppr)	Löschen (Entf)	Стереть (Del)	擦除 (Del)	消去 (Del)
+All screens in one image	Todas las pantallas en una imagen	Todos os monitores em uma imagem	Tous les écrans dans une image	Alle Monitore in einem Bild	Все мониторы на одном снимке	所有显示器合成一张图	すべてのモニターを 1 枚に
+Expand	Desplegar	Expandir	Déplier	Ausklappen	Развернуть	展开	展開
+Fill with the border color	Rellenar con el color del borde	Preencher com a cor da borda	Remplir avec la couleur du bord	Mit der Randfarbe füllen	Залить цветом края	用边缘颜色填充	境界の色で塗りつぶす
+Filled	Relleno	Preenchido	Plein	Gefüllt	Заливка	填充	塗りつぶし
+Fit to Window	Ajustar a la ventana	Ajustar à janela	Ajuster à la fenêtre	An Fenster anpassen	По размеру окна	适应窗口	ウィンドウに合わせる
+Follow cursor	Seguir al puntero	Seguir o cursor	Suivre le pointeur	Dem Zeiger folgen	За указателем	跟随指针	ポインターに追従
+Format	Formato	Formato	Format	Format	Формат	格式	形式
+Draw (D)	Dibujar (D)	Mão livre (D)	Main levée (D)	Freihand (D)	От руки (D)	手绘 (D)	フリーハンド (D)
+General	General	Geral	Général	Allgemein	Общие	常规	一般
+Global shortcuts	Atajos globales	Atalhos globais	Raccourcis globaux	Globale Tastenkürzel	Глобальные сочетания	全局快捷键	グローバルショートカット
+Hide thumbnail	Ocultar miniatura	Ocultar miniatura	Masquer la miniature	Miniatur ausblenden	Скрывать миниатюру	隐藏缩略图	サムネイルを隠す
+Highlighter (H)	Resaltador (H)	Marcador (H)	Surligneur (H)	Textmarker (H)	Маркер (H)	荧光笔 (H)	蛍光ペン (H)
+Enter to crop	Enter para recortar	Pressione Enter para cortar	Appuyez sur Entrée pour rogner	Enter zum Zuschneiden	Enter — обрезать	按 Enter 裁剪	Enter で切り抜き
+Point to a pixel and press Tab	Señala un píxel y pulsa Tab	Passe o mouse sobre um pixel e pressione Tab	Survolez un pixel et appuyez sur Tab	Maus über ein Pixel halten und Tab drücken	Наведите на пиксель и нажмите Tab	将鼠标悬停在像素上并按 Tab	ピクセルにマウスを合わせて Tab
+Image size	Tamaño de imagen	Tamanho da imagem	Taille de l’image	Bildgröße	Размер изображения	图像尺寸	画像サイズ
+Add size label	Añadir medidas	Gravar tamanho da seleção	Inscrire la taille de la sélection	Auswahlgröße einprägen	Нанести размер выделения	标注选区尺寸	選択範囲のサイズを書き込む
+Keep unsaved captures	Conservar capturas sin guardar	Manter imagens temporárias	Conserver les images temporaires	Temporäre Bilder behalten	Хранить временные изображения	保留临时图片	一時画像を保持
+Keeps the tray icon and shortcuts ready	Mantiene listos el icono de la bandeja y los atajos	Mantém o ícone da bandeja e os atalhos prontos	Garde l’icône et les raccourcis prêts	Hält Symbol und Tastenkürzel bereit	Значок в трее и сочетания всегда готовы	保持托盘图标和快捷键可用	トレイアイコンとショートカットを常に準備
+Language	Idioma	Idioma	Langue	Sprache	Язык	语言	言語
+Launch at startup	Abrir al iniciar sesión	Abrir ao iniciar	Lancer au démarrage	Beim Start öffnen	Запускать при входе	开机启动	ログイン時に起動
+Line	Línea	Linha	Ligne	Linie	Линия	直线	線
+Open from Clipboard	Abrir del portapapeles	Carregar da área de transferência	Charger depuis le presse-papiers	Aus Zwischenablage laden	Загрузить из буфера	从剪贴板载入	クリップボードから読み込む
+When closed manually	Al cerrar manualmente	Manualmente (botão fechar)	Manuellement (bouton fermer)	Manuell (Schließen-Knopf)	Вручную (кнопка закрытия)	手动（关闭按钮）	手動（閉じるボタン）
+Monitor	Monitor	Monitor	Écran	Monitor	Монитор	显示器	モニター
+More	Más	Mais	Plus	Mehr	Ещё	更多	その他
+More tools	Más herramientas	Mais ferramentas	Plus d’outils	Weitere Werkzeuge	Другие инструменты	更多工具	その他のツール
+Move pointer here to capture	Mueve el puntero aquí para capturar	Venha aqui para capturar esta tela	Venez ici pour capturer cet écran	Hierher bewegen, um diesen Bildschirm aufzunehmen	Наведите сюда, чтобы снять этот экран	移到这里以截取此屏幕	ここに移動してこの画面をキャプチャ
+Capture an area first	Primero captura un área	Nenhuma área para repetir	Aucune zone à répéter	Kein Bereich zum Wiederholen	Нет области для повтора	没有可重复的区域	繰り返す範囲がありません
+No text or codes found	No se encontró texto ni códigos	Nenhum texto encontrado	Aucun texte trouvé	Kein Text gefunden	Текст не найден	未找到文字	テキストが見つかりません
+None yet	Ninguna todavía	Nenhuma ainda	Aucune pour l’instant	Noch keine	Пока нет	暂无	まだありません
+Not added	Sin añadir	Não adicionado	Non ajouté	Nicht hinzugefügt	Не добавлено	未添加	未追加
+Not installed · {}	No instalado · {}	Não instalado · {}	Non installé · {}	Nicht installiert · {}	Не установлено · {}	未安装 · {}	未インストール · {}
+Not saved	Sin guardar	Não salvo	Non enregistré	Nicht gespeichert	Не сохранено	未保存	未保存
+Not saved: {}	Sin guardar: {}	Não salvo: {}	Non enregistré : {}	Nicht gespeichert: {}	Не сохранено: {}	未保存：{}	未保存: {}
+Do nothing	No hacer nada	Nada	Rien	Nichts	Ничего	无操作	何もしない
+Opacity	Opacidad	Opacidade	Opacité	Deckkraft	Непрозрачность	不透明度	不透明度
+Open File	Abrir archivo	Abrir arquivo	Ouvrir un fichier	Datei öffnen	Открыть файл	打开文件	ファイルを開く
+Install zenity to open images	Instala zenity para abrir imágenes	Abrir arquivo requer o zenity	Ouvrir un fichier nécessite zenity	Datei öffnen benötigt zenity	Для открытия файла нужен zenity	打开文件需要 zenity	ファイルを開くには zenity が必要です
+Open File…	Abrir archivo…	Abrir arquivo…	Ouvrir un fichier…	Datei öffnen…	Открыть файл…	打开文件…	ファイルを開く…
+Choose a screen below for the thumbnail	Elige abajo la pantalla de la miniatura	Ou clique em um monitor abaixo para mantê-la lá	Ou cliquez sur un écran ci-dessous pour l’y garder	Oder unten einen Monitor anklicken, um sie dort zu halten	Или щёлкните монитор ниже, чтобы закрепить	或点击下方的显示器将其固定	または下のモニターをクリックして固定
+Outline	Borde	Contorno	Contour	Umriss	Контур	描边	枠線
+Oval	Óvalo	Oval	Ovale	Oval	Овал	椭圆	楕円
+Pan with\nthe right\nbutton	Desplaza con\nel botón\nderecho	Mova com\no botão\ndireito	Déplacez avec\nle bouton\ndroit	Verschieben\nmit rechter\nTaste	Сдвиг\nправой\nкнопкой	右键\n拖动\n画面	右ボタンで\n移動
+Pick Color	Elegir color	Escolher cor	Choisir une couleur	Farbe aufnehmen	Выбрать цвет	拾取颜色	色を取得
+Pin	Fijar	Fixar	Épingler	Anheften	Закрепить	固定	ピン留め
+Pin failed: {}	No se pudo fijar: {}	Falha ao fixar: {}	Échec de l’épinglage : {}	Anheften fehlgeschlagen: {}	Не удалось закрепить: {}	固定失败：{}	ピン留めに失敗しました: {}
+Pin to Screen (Ctrl+P)	Fijar en pantalla (Ctrl+P)	Fixar na tela (Ctrl+P)	Épingler à l’écran (Ctrl+P)	An Bildschirm heften (Strg+P)	Закрепить на экране (Ctrl+P)	固定到屏幕 (Ctrl+P)	画面にピン留め (Ctrl+P)
+Pixelate (B)	Pixelar (B)	Pixelizar (B)	Pixeliser (B)	Verpixeln (B)	Пикселизация (B)	像素化 (B)	モザイク (B)
+Pointer	Puntero	Ponteiro	Pointeur	Zeiger	Указатель	指针	ポインター
+Preferences…	Preferencias…	Preferências…	Préférences…	Einstellungen…	Настройки…	偏好设置…	設定…
+Press keys…	Pulsa las teclas…	Pressione as teclas…	Appuyez sur les touches…	Tasten drücken…	Нажмите клавиши…	请按键…	キーを押してください…
+Shift+Tab copies the darkest color within 20 px	Mayús+Tab copia el color más oscuro en 20 px	Pressione Shift+Tab para copiar a cor mais escura em 20 px ao redor do cursor	Appuyez sur Maj+Tab pour copier la couleur la plus sombre dans 20 px autour du pointeur	Umschalt+Tab kopiert die dunkelste Farbe im 20-px-Umkreis des Zeigers	Shift+Tab копирует самый тёмный цвет в 20 px вокруг указателя	按 Shift+Tab 复制指针周围 20px 内最深的颜色	Shift+Tab でポインター周囲 20px の最も暗い色をコピー
+Primary	Principal	Principal	Principal	Primär	Основной	主显示器	メイン
+QR code copied	Código QR copiado	Código QR copiado	Code QR copié	QR-Code kopiert	QR-код скопирован	已复制二维码	QR コードをコピーしました
+Quit	Salir	Sair	Quitter	Beenden	Выход	退出	終了
+Reads QR and bar codes	Lee códigos QR y de barras	Lê códigos QR e de barras	Lit les codes QR et les codes-barres	Liest QR- und Strichcodes	Читает QR- и штрихкоды	识别二维码和条形码	QR コードとバーコードを読み取る
+Reads text	Lee texto	Lê texto	Lit le texte	Liest Text	Распознаёт текст	识别文字	テキストを読み取る
+Read Text / QR	Leer texto / QR	Reconhecer texto / QR	Reconnaître texte / QR	Text / QR erkennen	Распознать текст / QR	识别文字 / 二维码	テキスト / QR を認識
+Read Text / QR (Ctrl+O)	Leer texto / QR (Ctrl+O)	Reconhecer texto ou QR (Ctrl+O)	Reconnaître texte ou QR (Ctrl+O)	Text oder QR erkennen (Strg+O)	Распознать текст или QR (Ctrl+O)	识别文字或二维码 (Ctrl+O)	テキストまたは QR を認識 (Ctrl+O)
+Rectangle	Rectángulo	Retângulo	Rectangle	Rechteck	Прямоугольник	矩形	四角形
+Rectangle (R)	Rectángulo (R)	Retângulo (R)	Rectangle (R)	Rechteck (R)	Прямоугольник (R)	矩形 (R)	四角形 (R)
+Remove from GNOME	Quitar de GNOME	Remover do GNOME	Retirer de GNOME	Aus GNOME entfernen	Удалить из GNOME	从 GNOME 移除	GNOME から削除
+Repeat Area Capture	Repetir captura de área	Repetir área	Répéter la zone	Bereich wiederholen	Повторить область	重复区域	範囲を繰り返す
+Clear Selection	Quitar selección	Limpar seleção	Réinitialiser la sélection	Auswahl zurücksetzen	Сбросить выделение	重置选区	選択を解除
+Clear Selection (Esc)	Quitar selección (Esc)	Limpar seleção (Esc)	Réinitialiser la sélection (Échap)	Auswahl zurücksetzen (Esc)	Сбросить выделение (Esc)	重置选区 (Esc)	選択を解除 (Esc)
+Resize	Redimensionar	Redimensionar	Redimensionner	Größe ändern	Изменить размер	调整大小	サイズ変更
+Resize (⇧+])	Redimensionar (⇧+])	Ampliar (⇧+])	Agrandir (⇧+])	Vergrößern (⇧+])	Расширить (⇧+])	扩大 (⇧+])	拡大 (⇧+])
+Resize Image	Redimensionar imagen	Redimensionar imagem	Redimensionner l’image	Bildgröße ändern	Изменить размер изображения	调整图像大小	画像サイズを変更
+Revert all changes	Deshacer todos los cambios	Desfazer todas as alterações	Annuler toutes les modifications	Alle Änderungen verwerfen	Отменить все изменения	还原所有更改	すべての変更を元に戻す
+Save	Guardar	Salvar	Enregistrer	Speichern	Сохранить	保存	保存
+Save (Ctrl+S)	Guardar (Ctrl+S)	Salvar (Ctrl+S)	Enregistrer (Ctrl+S)	Speichern (Strg+S)	Сохранить (Ctrl+S)	保存 (Ctrl+S)	保存 (Ctrl+S)
+Save failed: {}	No se pudo guardar: {}	Falha ao salvar: {}	Échec de l’enregistrement : {}	Speichern fehlgeschlagen: {}	Не удалось сохранить: {}	保存失败：{}	保存に失敗しました: {}
+Save to folder	Guardar en la carpeta	Salvar na pasta	Enregistrer dans le dossier	Im Ordner speichern	Сохранять в папку	保存到文件夹	フォルダーに保存
+Saved	Guardado	Salvo	Enregistré	Gespeichert	Сохранено	已保存	保存しました
+Saved {}	Guardado {}	Salvo {}	Enregistré {}	Gespeichert: {}	Сохранено: {}	已保存 {}	{} を保存しました
+Saving	Guardado	Salvamento	Enregistrement	Speichern	Сохранение	保存	保存
+Saving…	Guardando…	Salvando…	Enregistrement…	Speichern…	Сохранение…	正在保存…	保存中…
+Screenshots folder	Carpeta de capturas	Pasta de capturas	Dossier des captures	Ordner für Aufnahmen	Папка снимков	截图文件夹	スクリーンショットのフォルダー
+Select an area · C copies its average color	Selecciona un área · C copia su color medio	Selecione uma área e pressione C para copiar a cor média	Sélectionnez une zone et appuyez sur C pour copier sa couleur moyenne	Bereich auswählen und C drücken, um die Durchschnittsfarbe zu kopieren	Выделите область и нажмите C, чтобы скопировать средний цвет	选择区域并按 C 复制其平均颜色	範囲を選択して C で平均色をコピー
+The selected area is empty	El área seleccionada está vacía	A área selecionada parece vazia	La zone sélectionnée semble vide	Der gewählte Bereich scheint leer zu sein	Выбранная область пуста	所选区域似乎为空	選択した範囲が空のようです
+Selection size	Tamaño de la selección	Tamanho da seleção	Taille de la sélection	Auswahlgröße	Размер выделения	选区尺寸	選択範囲のサイズ
+Shortcut removed from GNOME	Atajo quitado de GNOME	Atalho removido do GNOME	Raccourci retiré de GNOME	Kürzel aus GNOME entfernt	Сочетание удалено из GNOME	已从 GNOME 移除快捷键	GNOME からショートカットを削除しました
+Shortcut saved in GNOME	Atajo guardado en GNOME	Atalho salvo no GNOME	Raccourci enregistré dans GNOME	Kürzel in GNOME gespeichert	Сочетание сохранено в GNOME	快捷键已保存到 GNOME	GNOME にショートカットを保存しました
+Shortcuts	Atajos	Atalhos	Raccourcis	Tastenkürzel	Сочетания	快捷键	ショートカット
+Shortcuts added to GNOME	Atajos añadidos a GNOME	Atalhos adicionados ao GNOME	Raccourcis ajoutés à GNOME	Kürzel zu GNOME hinzugefügt	Сочетания добавлены в GNOME	快捷键已添加到 GNOME	GNOME にショートカットを追加しました
+Show	Mostrar	Mostrar	Afficher	Anzeigen	Показать	显示	表示
+Show in folder	Mostrar en la carpeta	Mostrar na pasta	Afficher dans le dossier	Im Ordner zeigen	Показать в папке	在文件夹中显示	フォルダーで表示
+Size in display points	Tamaño en puntos de pantalla	Mostrar tamanho em pontos lógicos	Afficher la taille en points logiques	Größe in logischen Punkten zeigen	Размер в логических точках	以逻辑点显示尺寸	論理ポイントでサイズを表示
+Show thumbnail	Mostrar miniatura	Mostrar miniatura	Afficher la miniature	Miniatur zeigen	Показывать миниатюру	显示缩略图	サムネイルを表示
+Solid	Sólida	Sólida	Pleine	Gefüllt	Сплошная	实心	塗り
+Spotlight (S)	Foco (S)	Holofote (S)	Projecteur (S)	Spotlight (S)	Прожектор (S)	聚光灯 (S)	スポットライト (S)
+System	Sistema	Sistema	Système	System	Система	系统	システム
+Tab to copy	Tab para copiar	Tab para copiar	Tab pour copier	Tab zum Kopieren	Tab — копировать	Tab 复制	Tab でコピー
+Temporary captures	Capturas temporales	Imagens temporárias	Images temporaires	Temporäre Bilder	Временные изображения	临时图片	一時画像
+Text	Texto	Texto	Texte	Text	Текст	文字	テキスト
+Text (T)	Texto (T)	Texto (T)	Texte (T)	Text (T)	Текст (T)	文字 (T)	テキスト (T)
+Text copied	Texto copiado	Texto copiado	Texte copié	Text kopiert	Текст скопирован	已复制文字	テキストをコピーしました
+Text recognition	Reconocimiento de texto	Reconhecimento de texto	Reconnaissance de texte	Texterkennung	Распознавание текста	文字识别	テキスト認識
+Text recognition needs tesseract. Install it with: {}	El reconocimiento de texto necesita tesseract. Instálalo con: {}	O reconhecimento de texto requer o tesseract. Instale com: {}	La reconnaissance de texte nécessite tesseract. Installez-le avec : {}	Texterkennung benötigt tesseract. Installieren mit: {}	Для распознавания текста нужен tesseract. Установите: {}	文字识别需要 tesseract。请用以下命令安装：{}	テキスト認識には tesseract が必要です。次でインストール: {}
+The clipboard has no image	El portapapeles no tiene imagen	A área de transferência não tem imagem	Le presse-papiers ne contient pas d’image	Die Zwischenablage enthält kein Bild	В буфере обмена нет изображения	剪贴板中没有图片	クリップボードに画像がありません
+The monitor under the pointer	El monitor bajo el puntero	O monitor sob o ponteiro	L’écran sous le pointeur	Der Monitor unter dem Zeiger	Монитор под указателем	指针所在的显示器	ポインターのあるモニター
+Thumbnail	Miniatura	Miniatura	Miniature	Miniatur	Миниатюра	缩略图	サムネイル
+Translucent	Translúcido	Translúcido	Translucide	Durchscheinend	Полупрозрачный	半透明	半透明
+Unsaved captures are deleted when the thumbnail closes	Las capturas sin guardar se borran al cerrar la miniatura	Capturas não salvas são apagadas ao fechar a miniatura	Les captures non enregistrées sont supprimées à la fermeture de la miniature	Ungespeicherte Aufnahmen werden beim Schließen der Miniatur gelöscht	Несохранённые снимки удаляются при закрытии миниатюры	未保存的截图在缩略图关闭时删除	未保存のキャプチャはサムネイルを閉じると削除
+Unsaved captures stay in memory until you restart	Las capturas sin guardar quedan en memoria hasta reiniciar	Capturas não salvas ficam na memória até reiniciar	Les captures non enregistrées restent en mémoire jusqu’au redémarrage	Ungespeicherte Aufnahmen bleiben bis zum Neustart im Speicher	Несохранённые снимки хранятся в памяти до перезагрузки	未保存的截图保留在内存中直到重启	未保存のキャプチャは再起動までメモリに保持
+Use Ctrl, Alt or Shift with the key (Esc cancels)	Usa Ctrl, Alt o Mayús con la tecla (Esc cancela)	Use Ctrl, Alt ou Shift com a tecla (Esc cancela)	Utilisez Ctrl, Alt ou Maj avec la touche (Échap annule)	Strg, Alt oder Umschalt mit der Taste verwenden (Esc bricht ab)	Используйте Ctrl, Alt или Shift с клавишей (Esc — отмена)	请配合 Ctrl、Alt 或 Shift 使用（Esc 取消）	Ctrl、Alt、Shift と組み合わせてください（Esc で取消）
+When hiding with Esc	Al ocultar con Esc	Ao fechar com Esc	À la fermeture avec Échap	Beim Schließen mit Esc	При закрытии по Esc	按 Esc 关闭时	Esc で閉じるとき
+Width {}	Grosor {}	Espessura {}	Épaisseur {}	Stärke {}	Толщина {}	粗细 {}	太さ {}
+Captures the whole screen	Captura toda la pantalla	Com um monitor é sempre a tela inteira	Avec un écran, c’est toujours l’écran entier	Bei einem Monitor immer der ganze Bildschirm	С одним монитором — всегда весь экран	单显示器时始终为整个屏幕	モニターが 1 台なら常に画面全体
+Screens to capture	Pantallas que capturar	Com vários monitores	Avec plusieurs écrans	Mit mehreren Monitoren	С несколькими мониторами	多显示器时	複数のモニターでは
+Zoom	Zoom	Zoom	Zoom	Zoom	Масштаб	缩放	ズーム
+Zoom In	Acercar	Ampliar	Zoom avant	Vergrößern	Увеличить	放大	拡大
+Zoom Out	Alejar	Reduzir	Zoom arrière	Verkleinern	Уменьшить	缩小	縮小
+Zoom to Selection	Zoom a la selección	Zoom na seleção	Zoom sur la sélection	Auf Auswahl zoomen	Масштаб по выделению	缩放到选区	選択範囲にズーム
+Zoom with\nthe scroll\nwheel	Zoom con\nla rueda\ndel ratón	Zoom com\na roda\ndo mouse	Zoom avec\nla molette	Zoomen\nmit dem\nMausrad	Масштаб\nколёсиком\nмыши	滚轮\n缩放	ホイールで\nズーム
+{} images · {}	{} imágenes · {}	{} imagens · {}	{} images · {}	{} Bilder · {}	Изображений: {} · {}	{} 张图片 · {}	{} 枚の画像 · {}
+Could not open {}	No se pudo abrir {}	Não foi possível abrir {}	Impossible d’ouvrir {}	{} konnte nicht geöffnet werden	Не удалось открыть {}	无法打开 {}	{} を開けません
+No config folder	No hay carpeta de configuración	Sem pasta de configuração	Aucun dossier de configuration	Kein Konfigurationsordner	Нет папки настроек	没有配置文件夹	設定フォルダーがありません
+Interface language	Idioma de la interfaz	Idioma da interface	Langue de l’interface	Sprache der Oberfläche	Язык интерфейса	界面语言	表示言語
+All added	Todos añadidos	Todos adicionados	Tous ajoutés	Alle hinzugefügt	Все добавлены	已全部添加	すべて追加済み
+Add all	Añadir todos	Adicionar todos	Tout ajouter	Alle hinzufügen	Добавить все	全部添加	すべて追加
+Add	Añadir	Adicionar	Ajouter	Hinzufügen	Добавить	添加	追加
+{} is already used by {}	{} ya lo usa {}	{} já é usado por {}	{} est déjà utilisé par {}	{} wird schon von {} verwendet	{} уже используется: {}	{} 已被 {} 使用	{} は {} で使用中
+Click to capture this window	Haz clic para capturar esta ventana	Clique para capturar esta janela	Cliquez pour capturer cette fenêtre	Klicken, um dieses Fenster aufzunehmen	Нажмите, чтобы снять это окно	点击截取此窗口	クリックでこのウィンドウをキャプチャ
+Capture Window needs the RapidShot GNOME extension. Run just install and log in again.	Capturar ventana necesita la extensión de GNOME de RapidShot. Ejecuta just install y vuelve a iniciar sesión.	Capturar janela precisa da extensão do GNOME do RapidShot. Execute just install e entre de novo.	La capture de fenêtre a besoin de l’extension GNOME de RapidShot. Lancez just install et reconnectez-vous.	Fensteraufnahme braucht die GNOME-Erweiterung von RapidShot. Führe just install aus und melde dich neu an.	Для снимка окна нужно расширение GNOME RapidShot. Выполните just install и войдите снова.	截取窗口需要 RapidShot 的 GNOME 扩展。运行 just install 并重新登录。	ウィンドウのキャプチャには RapidShot の GNOME 拡張機能が必要です。just install を実行して再ログインしてください。
+Appearance	Apariencia	Aparência	Apparence	Erscheinungsbild	Внешний вид	外观	外観
+Frosted glass	Vidrio esmerilado	Vidro fosco	Verre dépoli	Milchglas	Матовое стекло	磨砂玻璃	すりガラス
+Blur what is behind the window	Desenfoca lo que hay detrás de la ventana	Desfoca o que está atrás da janela	Floute ce qui se trouve derrière la fenêtre	Macht den Hintergrund des Fensters unscharf	Размывает то, что за окном	模糊窗口后面的内容	ウィンドウの背後をぼかします
+Background blur requires GNOME 51 or later	El desenfoque requiere GNOME 51 o posterior	Seu ambiente não oferece desfoque (GNOME 51 ou posterior)	Votre bureau ne propose pas de flou (GNOME 51 ou ultérieur)	Ihr Desktop bietet keine Unschärfe (GNOME 51 oder neuer)	Ваш рабочий стол не поддерживает размытие (GNOME 51 или новее)	你的桌面不支持模糊（需要 GNOME 51 或更高版本）	お使いのデスクトップはぼかしに対応していません（GNOME 51 以降）
+Background tint	Tinte del fondo	Tonalidade do fundo	Teinte de l’arrière-plan	Hintergrundtönung	Оттенок фона	背景色调	背景の色合い
+Theme color over the blurred background	Color del tema sobre el fondo desenfocado	Mistura a cor do tema sobre o fundo desfocado	Mélange la couleur du thème sur l’arrière-plan flouté	Mischt die Themenfarbe über den unscharfen Hintergrund	Смешивает цвет темы с размытым фоном	在模糊背景上叠加主题颜色	ぼかした背景にテーマの色を重ねます
+Tint darkness	Oscuridad del tinte	Escuridão da tonalidade	Assombrissement de la teinte	Tönungsdunkelheit	Темнота оттенка	色调深度	色合いの暗さ
+Darken the background tint	Oscurecer el tinte del fondo	Do cinza do tema ao preto	Du gris du thème au noir	Vom Grau des Themas bis Schwarz	От серого цвета темы до чёрного	从主题灰色到黑色	テーマのグレーから黒まで
+Custom Color	Color personalizado	Cor personalizada	Couleur personnalisée	Eigene Farbe	Свой цвет	自定义颜色	カスタムカラー
+Color Palettes	Paletas de colores	Paletas de cores	Palettes de couleurs	Farbpaletten	Цветовые палитры	调色板	カラーパレット
+Picked colors	Colores elegidos	Cores escolhidas	Couleurs prélevées	Aufgenommene Farben	Выбранные цвета	拾取的颜色	取得した色
+Library	Biblioteca	Biblioteca	Bibliothèque	Bibliothek	Библиотека	库	ライブラリ
+New palette	Nueva paleta	Nova paleta	Nouvelle palette	Neue Palette	Новая палитра	新建调色板	新しいパレット
+Palette	Paleta	Paleta	Palette	Palette	Палитра	调色板	パレット
+Save as palette	Guardar como paleta	Salvar como paleta	Enregistrer comme palette	Als Palette speichern	Сохранить как палитру	保存为调色板	パレットとして保存
+Delete palette	Eliminar paleta	Excluir paleta	Supprimer la palette	Palette löschen	Удалить палитру	删除调色板	パレットを削除
+Delete palette?	¿Eliminar paleta?	Excluir paleta?	Supprimer la palette ?	Palette löschen?	Удалить палитру?	删除调色板？	パレットを削除しますか？
+Duplicate	Duplicar	Duplicar	Dupliquer	Duplizieren	Дублировать	复制一份	複製
+Click to rename	Haz clic para renombrar	Clique para renomear	Cliquez pour renommer	Zum Umbenennen klicken	Щёлкните, чтобы переименовать	点击重命名	クリックして名前を変更
+Add lighter color	Añadir un color más claro	Adicionar cor mais clara	Ajouter une couleur plus claire	Hellere Farbe hinzufügen	Добавить цвет светлее	添加更浅的颜色	明るい色を追加
+Add darker color	Añadir un color más oscuro	Adicionar cor mais escura	Ajouter une couleur plus foncée	Dunklere Farbe hinzufügen	Добавить цвет темнее	添加更深的颜色	暗い色を追加
+Add color	Añadir color	Adicionar cor	Ajouter une couleur	Farbe hinzufügen	Добавить цвет	添加颜色	色を追加
+Colors you pick with the eyedropper appear here	Los colores que tomes con el cuentagotas aparecen aquí	As cores que você pegar com o conta-gotas aparecem aqui	Les couleurs prélevées à la pipette apparaissent ici	Mit der Pipette aufgenommene Farben erscheinen hier	Цвета, взятые пипеткой, появятся здесь	用吸管拾取的颜色会显示在这里	スポイトで取得した色がここに表示されます
+Remove color	Quitar color	Remover cor	Retirer la couleur	Farbe entfernen	Убрать цвет	移除颜色	色を削除
+View shades	Ver tonos	Ver tons	Voir les nuances	Abstufungen anzeigen	Показать оттенки	查看色阶	色調を表示
+Drag	Arrastrar	Arrastar	Faire glisser	Ziehen	Перетащить	拖动	ドラッグ
+Copy HEX	Copiar HEX	Copiar HEX	Copier le HEX	HEX kopieren	Копировать HEX	复制 HEX	HEX をコピー
+Secondary info	Dato secundario	Informação secundária	Info secondaire	Zusatzinfo	Доп. информация	次要信息	補助情報
+Name	Nombre	Nome	Nom	Name	Название	名称	名前
+Picker	Selector	Seletor	Sélecteur	Auswahl	Палитра	取色器	ピッカー
+Hue	Tono	Matiz	Teinte	Farbton	Тон	色相	色相
+Saturation	Saturación	Saturação	Saturation	Sättigung	Насыщенность	饱和度	彩度
+Brightness	Brillo	Brilho	Luminosité	Helligkeit	Яркость	亮度	明度
+Luminance	Luminancia	Luminância	Luminance	Luminanz	Светлота	明度	輝度
+Red	Rojo	Vermelho	Rouge	Rot	Красный	红	赤
+Green	Verde	Verde	Vert	Grün	Зелёный	绿	緑
+Blue	Azul	Azul	Bleu	Blau	Синий	蓝	青
+Cyan	Cian	Ciano	Cyan	Cyan	Голубой	青色	シアン
+Magenta	Magenta	Magenta	Magenta	Magenta	Пурпурный	品红	マゼンタ
+Yellow	Amarillo	Amarelo	Jaune	Gelb	Жёлтый	黄	イエロー
+Key	Negro	Preto	Noir	Schwarz	Чёрный	黑	キー
+Green-Red	Verde-rojo	Verde-vermelho	Vert-rouge	Grün-Rot	Зелёный-красный	绿-红	緑-赤
+Blue-Yellow	Azul-amarillo	Azul-amarelo	Bleu-jaune	Blau-Gelb	Синий-жёлтый	蓝-黄	青-黄
+Lightness	Luminosidad	Luminosidade	Clarté	Helligkeit (L)	Светлость	亮度 (L)	明度 (L)
+Chroma	Croma	Croma	Chroma	Buntheit	Хрома	彩度	彩度 (C)
+Outside sRGB: showing the closest color	Fuera de sRGB: se muestra el color más cercano	Fora do sRGB: mostrando a cor mais próxima	Hors sRGB : couleur la plus proche affichée	Außerhalb von sRGB: nächste Farbe wird gezeigt	Вне sRGB: показан ближайший цвет	超出 sRGB：显示最接近的颜色	sRGB の範囲外：最も近い色を表示
+Right-click to copy	Clic derecho para copiar	Clique com o botão direito para copiar	Clic droit pour copier	Rechtsklick zum Kopieren	Правый клик — копировать	右键复制	右クリックでコピー
+Duplicate color	Duplicar color	Duplicar cor	Dupliquer la couleur	Farbe duplizieren	Дублировать цвет	复制颜色	色を複製
+Main value of each color	Valor principal de cada color	Valor principal de cada cor	Valeur principale de chaque couleur	Hauptwert jeder Farbe	Основное значение каждого цвета	每种颜色的主要数值	各色のメインの値
+Secondary Info	Dato secundario	Dado secundário	Information secondaire	Zusatzinfo	Дополнительные данные	次要信息	サブ情報
+Shown under the main value	Se muestra bajo el valor principal	Exibido abaixo do valor principal	Affichée sous la valeur principale	Unter dem Hauptwert angezeigt	Показывается под основным значением	显示在主要数值下方	メインの値の下に表示
+Palettes File	Archivo de paletas	Arquivo de paletas	Fichier de palettes	Palettendatei	Файл палитр	调色板文件	パレットファイル
+Adobe Swatch Exchange (.ase); imports .gpl too	Adobe Swatch Exchange (.ase); también importa .gpl	Adobe Swatch Exchange (.ase); também importa .gpl	Adobe Swatch Exchange (.ase) ; importe aussi .gpl	Adobe Swatch Exchange (.ase); importiert auch .gpl	Adobe Swatch Exchange (.ase); также импортирует .gpl	Adobe Swatch Exchange (.ase)；也可导入 .gpl	Adobe Swatch Exchange (.ase)。.gpl も読み込めます
+Export…	Exportar…	Exportar…	Exporter…	Exportieren…	Экспорт…	导出…	書き出す…
+Import…	Importar…	Importar…	Importer…	Importieren…	Импорт…	导入…	読み込む…
+Export Palettes	Exportar paletas	Exportar paletas	Exporter les palettes	Paletten exportieren	Экспорт палитр	导出调色板	パレットを書き出す
+Import Palettes	Importar paletas	Importar paletas	Importer des palettes	Paletten importieren	Импорт палитр	导入调色板	パレットを読み込む
+Palettes	Paletas	Paletas	Palettes	Paletten	Палитры	调色板	パレット
+Imported	Importada	Importada	Importée	Importiert	Импортированная	已导入	読み込み済み
+There are no saved palettes to export	No hay paletas guardadas para exportar	Não há paletas salvas para exportar	Aucune palette enregistrée à exporter	Keine gespeicherten Paletten zum Exportieren	Нет сохранённых палитр для экспорта	没有可导出的已保存调色板	書き出す保存済みパレットがありません
+Exported {} palettes	{} paletas exportadas	{} paletas exportadas	{} palettes exportées	{} Paletten exportiert	Экспортировано палитр: {}	已导出 {} 个调色板	{} 個のパレットを書き出しました
+Imported {} palettes	{} paletas importadas	{} paletas importadas	{} palettes importées	{} Paletten importiert	Импортировано палитр: {}	已导入 {} 个调色板	{} 個のパレットを読み込みました
+Could not export palettes: {}	No se pudieron exportar las paletas: {}	Não foi possível exportar as paletas: {}	Impossible d’exporter les palettes : {}	Paletten konnten nicht exportiert werden: {}	Не удалось экспортировать палитры: {}	无法导出调色板：{}	パレットを書き出せませんでした: {}
+Could not import palettes: {}	No se pudieron importar las paletas: {}	Não foi possível importar as paletas: {}	Impossible d’importer les palettes : {}	Paletten konnten nicht importiert werden: {}	Не удалось импортировать палитры: {}	无法导入调色板：{}	パレットを読み込めませんでした: {}
+Could not save palettes: {}	No se pudieron guardar las paletas: {}	Não foi possível salvar as paletas: {}	Impossible d’enregistrer les palettes : {}	Paletten konnten nicht gespeichert werden: {}	Не удалось сохранить палитры: {}	无法保存调色板：{}	パレットを保存できませんでした: {}
+Unknown palette file	Archivo de paleta desconocido	Arquivo de paleta desconhecido	Fichier de palette inconnu	Unbekannte Palettendatei	Неизвестный файл палитры	未知的调色板文件	不明なパレットファイル
+The file has no colors	El archivo no tiene colores	O arquivo não tem cores	Le fichier ne contient aucune couleur	Die Datei enthält keine Farben	В файле нет цветов	文件中没有颜色	ファイルに色がありません
+Invalid ASE file	Archivo ASE no válido	Arquivo ASE inválido	Fichier ASE non valide	Ungültige ASE-Datei	Недопустимый файл ASE	无效的 ASE 文件	無効な ASE ファイル

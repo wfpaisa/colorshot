@@ -1,0 +1,27 @@
+[package]
+name = "rapidshot-ui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+rapidshot-core = { path = "../core" }
+egui = "0.36"
+egui-phosphor = "0.14"
+eframe = { version = "0.36", default-features = false, features = ["default_fonts", "glow", "x11", "wayland", "persistence", "accesskit"] }
+egui_extras = { version = "0.36", features = ["image"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+ksni = "0.3"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+ron = "0.12"
+log = "0.4"
+dirs = "6"
+ab_glyph = "0.2"
+resvg = { version = "0.46", default-features = false }
+epaint_default_fonts = "0.36"
+# Desenfoque del fondo (`blur.rs`).
+raw-window-handle = "0.6"
+wayland-client = "0.31"
+wayland-backend = { version = "0.3", features = ["client_system", "dlopen"] }
+wayland-protocols = { version = "0.32", features = ["client", "staging", "unstable"] }
