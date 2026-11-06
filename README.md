@@ -61,6 +61,22 @@
 | `zenity` | "Open File" dialog |
 | `libnotify` (`notify-send`) | Notifications |
 
+<details>
+<summary>Install dependencies</summary>
+
+| Distro | Command |
+| --- | --- |
+| Fedora | `sudo dnf install wl-clipboard tesseract zbar zenity libnotify` |
+| Arch Linux | `sudo pacman -S wl-clipboard tesseract tesseract-data-eng zbar zenity libnotify` |
+| Ubuntu/Debian | `sudo apt install wl-clipboard tesseract-ocr zbar-tools zenity libnotify-bin` |
+| openSUSE | `sudo zypper install wl-clipboard tesseract-ocr tesseract-ocr-traineddata-english zbar zenity libnotify-tools` |
+
+Add more Tesseract languages with your distro's language packs (for example
+`tesseract-langpack-spa`, `tesseract-data-spa`, `tesseract-ocr-spa` or
+`tesseract-ocr-traineddata-spanish` for Spanish).
+
+</details>
+
 ## Install
 
 Install or update to the latest release (x86_64, no root needed):
