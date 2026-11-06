@@ -73,10 +73,18 @@ It installs:
 Log out and back in once so GNOME loads the extension. It is needed for **Capture Window**,
 for drawing the selector over the top bar and for capturing only the chosen area.
 
-Pick a version with `bash -s -- --version v0.1.0`, or remove everything with
-`bash -s -- --uninstall` (your settings in `~/.config/colorshot` are kept). You can also
-download the archive from [Releases](https://github.com/wfpaisa/colorshot/releases), extract it
-and run `./install.sh`.
+Pick a version with `bash -s -- --version v0.1.0`. You can also download the archive from
+[Releases](https://github.com/wfpaisa/colorshot/releases), extract it and run `./install.sh`.
+
+### Uninstall
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/wfpaisa/colorshot/main/install.sh | bash -s -- --uninstall
+```
+
+It stops the running instance and removes the binary, the launcher, the icons and the GNOME
+Shell extension. Your settings in `~/.config/colorshot` are kept; delete that folder to remove
+them too. From an extracted archive or a clone, run `./install.sh --uninstall` instead.
 
 ### From source
 
