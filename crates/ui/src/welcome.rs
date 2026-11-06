@@ -735,7 +735,7 @@ fn menu_texture(ctx: &egui::Context) -> Option<egui::TextureHandle> {
                     [image.width() as usize, image.height() as usize],
                     image.as_raw(),
                 ),
-                egui::TextureOptions::LINEAR,
+                crate::icons::SMOOTH,
             )
         });
     ctx.data_mut(|d| d.insert_temp(id, texture.clone()));

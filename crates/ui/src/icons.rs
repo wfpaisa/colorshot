@@ -3,6 +3,13 @@
 use egui::{Button, RichText, TextureHandle};
 use std::path::PathBuf;
 
+/// Los iconos se dibujan varias veces más grandes de lo que se pintan: sin mipmaps, el filtro
+/// lineal salta píxeles al reducirlos y los bordes quedan escalonados.
+pub(crate) const SMOOTH: egui::TextureOptions = egui::TextureOptions {
+    mipmap_mode: Some(egui::TextureFilter::Linear),
+    ..egui::TextureOptions::LINEAR
+};
+
 pub fn dir() -> Option<PathBuf> {
     Some(dirs::data_dir()?.join("colorshot").join("icons"))
 }
@@ -68,7 +75,7 @@ pub fn logo_texture(ctx: &egui::Context) -> Option<TextureHandle> {
                 [image.width() as usize, image.height() as usize],
                 image.as_raw(),
             ),
-            egui::TextureOptions::LINEAR,
+            SMOOTH,
         )
     });
     ctx.data_mut(|d| d.insert_temp(id, texture.clone()));
@@ -130,7 +137,7 @@ pub fn texture(ctx: &egui::Context, name: &str) -> Option<TextureHandle> {
                 [image.width() as usize, image.height() as usize],
                 image.as_raw(),
             ),
-            egui::TextureOptions::LINEAR,
+            SMOOTH,
         )
     });
     ctx.data_mut(|d| d.insert_temp(id, texture.clone()));
