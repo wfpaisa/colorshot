@@ -9,11 +9,12 @@ Terminal=false
 Categories=Graphics;
 Keywords=screenshot;capture;ocr;annotate;
 StartupWMClass=colorshot
-# Sin esto GNOME añade «New Window», que solo vuelve a lanzar el proceso de la bandeja.
 SingleMainWindow=true
-Actions=area;full;window;ocr;color;palettes;last;folder;prefs;welcome;
+# «new-window» es Capture Area: GNOME añade su «New Window» (que solo relanza la bandeja)
+# a toda app sin ventanas abiertas, salvo que declare una acción con ese id.
+Actions=new-window;full;window;ocr;color;palettes;last;folder;prefs;welcome;
 
-[Desktop Action area]
+[Desktop Action new-window]
 Name=Capture Area
 Name[es]=Capturar área
 Name[pt]=Capturar área
