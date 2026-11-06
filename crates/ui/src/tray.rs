@@ -174,10 +174,26 @@ impl ksni::Tray for Tray {
     }
 }
 
+/// Comprueba la conexión propia con el bus de sesión. Al cerrar sesión se reinicia el bus
+/// (el socket sigue en la misma ruta) y la conexión vieja queda rota.
+async fn bus_alive(bus: &zbus::Connection) -> bool {
+    bus.call_method(
+        Some("org.freedesktop.DBus"),
+        "/org/freedesktop/DBus",
+        Some("org.freedesktop.DBus.Peer"),
+        "Ping",
+        &(),
+    )
+    .await
+    .is_ok()
+}
+
 /// Publica el icono. Al iniciar sesión la instancia suele arrancar antes que la extensión
 /// AppIndicator: el icono se registra cuando aparece la bandeja, sin rendirse al primer fallo.
 pub fn spawn(runtime: &tokio::runtime::Handle, commands: Sender<Command>) {
     runtime.spawn(async move {
+        let quit = commands.clone();
+        let bus = zbus::Connection::session().await.ok();
         let handle = match (Tray {
             commands,
             tint: menu_tint(),
@@ -196,6 +212,15 @@ pub fn spawn(runtime: &tokio::runtime::Handle, commands: Sender<Command>) {
         let mut language = Settings::load().language;
         loop {
             tokio::time::sleep(std::time::Duration::from_secs(2)).await;
+            // Al cerrar sesión GNOME reinicia el bus de sesión, pero este proceso puede
+            // sobrevivir sin icono y bloquear el del nuevo inicio: se cierra para dejarle sitio.
+            if let Some(bus) = &bus
+                && !bus_alive(bus).await
+            {
+                log::warn!("Tray lost its D-Bus session; quitting");
+                let _ = quit.send(Command::Quit);
+                return;
+            }
             let now = Settings::load().language;
             if now != language {
                 language = now;
