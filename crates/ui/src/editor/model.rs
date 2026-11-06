@@ -570,9 +570,15 @@ fn marker(image: &mut RgbaImage, points: &[Pos2], width: f32, color: Color32) {
         false,
     );
 }
+/// Índices de `shapes` en orden de pintado: los desenfoques siempre debajo del resto.
+pub fn paint_order(shapes: &[Shape]) -> Vec<usize> {
+    let mut order: Vec<usize> = (0..shapes.len()).collect();
+    order.sort_by_key(|&i| !matches!(shapes[i], Shape::Blur { .. }));
+    order
+}
 pub fn render(doc: &Document) -> RgbaImage {
     let mut image = doc.image.clone();
-    for shape in &doc.shapes {
+    for shape in paint_order(&doc.shapes).into_iter().map(|i| &doc.shapes[i]) {
         for primitive in primitives(shape) {
             match primitive {
                 Primitive::Path(points, style) => path(&mut image, &points, style, true),

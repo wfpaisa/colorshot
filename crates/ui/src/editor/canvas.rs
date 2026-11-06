@@ -294,7 +294,7 @@ impl Editor {
             .chain(self.drawing.iter())
             .cloned()
             .collect();
-        for shape in &shapes {
+        for shape in model::paint_order(&shapes).into_iter().map(|i| &shapes[i]) {
             if let Shape::Blur {
                 rect: zone,
                 erase: false,
@@ -442,11 +442,9 @@ impl Editor {
         if self.tool == Tool::Crop {
             return None;
         }
-        let index = self
-            .doc
-            .shapes
-            .iter()
-            .rposition(|shape| edit::hit(shape, at, tolerance))?;
+        let index = model::paint_order(&self.doc.shapes)
+            .into_iter()
+            .rfind(|&i| edit::hit(&self.doc.shapes[i], at, tolerance))?;
         grab(Target::Shape(index), None)
     }
     /// Arrastrar en vacío marca una zona de recorte: Crop y Select.
