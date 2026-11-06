@@ -25,7 +25,7 @@ install: build icons
     install -Dm755 target/release/colorshot "$HOME/.local/bin/colorshot"
     # Logo y lanzador; el app_id de las ventanas es colorshot, como el .desktop.
     install -Dm644 assets/logo.svg "${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor/scalable/apps/colorshot.svg"
-    sed "s|^Exec=.*|Exec=$HOME/.local/bin/colorshot|" assets/colorshot.desktop | install -Dm644 /dev/stdin "${XDG_DATA_HOME:-$HOME/.local/share}/applications/colorshot.desktop"
+    sed "s|^Exec=colorshot|Exec=$HOME/.local/bin/colorshot|" assets/colorshot.desktop | install -Dm644 /dev/stdin "${XDG_DATA_HOME:-$HOME/.local/share}/applications/colorshot.desktop"
     -gtk-update-icon-cache -q -t "${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor"
     # Extensión de GNOME para «Capture Window»; la primera vez hay que volver a iniciar sesión.
     install -Dm644 -t "${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions/colorshot@wfelipe.com" extension/colorshot@wfelipe.com/*

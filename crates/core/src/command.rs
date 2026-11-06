@@ -27,10 +27,12 @@ pub enum Command {
     OpenFile,
     Clipboard,
     Preferences,
+    /// Asistente de bienvenida: extensión, atajos e inicio automático.
+    Welcome,
     Quit,
 }
 
-pub const USAGE: &str = "Usage: colorshot [area | full | window | ocr | color | palettes | repeat | delayed | clipboard | open | prefs | edit <file> | pin <file> | quit | --version]";
+pub const USAGE: &str = "Usage: colorshot [area | full | window | ocr | color | palettes | repeat | delayed | clipboard | open | prefs | welcome | edit <file> | pin <file> | quit | --version]";
 
 impl Command {
     pub fn parse(args: &[String]) -> Option<Self> {
@@ -48,6 +50,7 @@ impl Command {
                 "open" => Self::OpenFile,
                 "clipboard" => Self::Clipboard,
                 "prefs" => Self::Preferences,
+                "welcome" => Self::Welcome,
                 "quit" => Self::Quit,
                 _ => return None,
             },
@@ -73,6 +76,7 @@ impl Command {
             Self::OpenFile => "open".into(),
             Self::Clipboard => "clipboard".into(),
             Self::Preferences => "prefs".into(),
+            Self::Welcome => "welcome".into(),
             Self::Quit => "quit".into(),
             Self::Edit(path) | Self::Pin(path) | Self::Preview(path) | Self::Scan(path) => {
                 let verb = match self {
@@ -119,6 +123,7 @@ mod tests {
             Command::OpenFile,
             Command::Clipboard,
             Command::Preferences,
+            Command::Welcome,
             Command::Quit,
             Command::Edit("/tmp/a b.png".into()),
             Command::Pin("/tmp/p.png".into()),

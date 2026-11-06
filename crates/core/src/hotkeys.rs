@@ -48,7 +48,7 @@ fn gsettings(args: &[&str]) -> Result<String, HotkeyError> {
 }
 
 /// Lista de rutas en formato GVariant (`@as []` o `['/a/', '/b/']`).
-fn parse_list(text: &str) -> Vec<String> {
+pub(crate) fn parse_list(text: &str) -> Vec<String> {
     text.trim_start_matches("@as")
         .trim()
         .trim_matches(|c| c == '[' || c == ']')
@@ -58,7 +58,7 @@ fn parse_list(text: &str) -> Vec<String> {
         .collect()
 }
 
-fn format_list(items: &[String]) -> String {
+pub(crate) fn format_list(items: &[String]) -> String {
     let quoted: Vec<_> = items.iter().map(|s| format!("'{s}'")).collect();
     format!("[{}]", quoted.join(", "))
 }

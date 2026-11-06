@@ -29,12 +29,12 @@ enum Tab {
 
 pub const SIZE: egui::Vec2 = vec2(720., 660.);
 /// Alto de la barra, el mismo que en el editor.
-const BAR: f32 = 52.;
-const PAD: f32 = 28.;
+pub(crate) const BAR: f32 = 52.;
+pub(crate) const PAD: f32 = 28.;
 const INSET: f32 = 18.;
 const ROW: f32 = 50.;
 const RADIUS: u8 = 12;
-const OK: Color32 = Color32::from_rgb(51, 209, 122);
+pub(crate) const OK: Color32 = Color32::from_rgb(51, 209, 122);
 /// Alto y radio de todos los controles de las filas.
 const CONTROL: f32 = 32.;
 const CONTROL_RADIUS: u8 = 8;
@@ -798,7 +798,7 @@ impl Preferences {
 }
 
 /// Tarjeta de tablet-center: título en versalitas dentro y las filas debajo.
-fn group(ui: &mut Ui, g: &Gnome, title: &str, add: impl FnOnce(&mut Ui)) {
+pub(crate) fn group(ui: &mut Ui, g: &Gnome, title: &str, add: impl FnOnce(&mut Ui)) {
     ui.add_space(18.);
     let frame = egui::Frame::new()
         .fill(g.card)
@@ -828,7 +828,7 @@ fn group(ui: &mut Ui, g: &Gnome, title: &str, add: impl FnOnce(&mut Ui)) {
 }
 
 /// Fila de la tarjeta: nombre (y explicación) a la izquierda, control a la derecha.
-fn row(
+pub(crate) fn row(
     ui: &mut Ui,
     g: &Gnome,
     title: &str,
@@ -914,7 +914,7 @@ fn icon_button(ui: &mut Ui, g: &Gnome, glyph: &str) -> egui::Response {
 }
 
 /// Interruptor de GNOME.
-fn switch(ui: &mut Ui, g: &Gnome, value: &mut bool) -> egui::Response {
+pub(crate) fn switch(ui: &mut Ui, g: &Gnome, value: &mut bool) -> egui::Response {
     let (rect, mut response) = ui.allocate_exact_size(vec2(46., 26.), Sense::click());
     if response.clicked() {
         *value = !*value;
@@ -1114,7 +1114,7 @@ fn select<T: Clone + PartialEq>(
 }
 
 /// Botón con texto.
-fn pill(ui: &mut Ui, g: &Gnome, text: &str) -> egui::Response {
+pub(crate) fn pill(ui: &mut Ui, g: &Gnome, text: &str) -> egui::Response {
     let galley = ui
         .painter()
         .layout_no_wrap(text.to_owned(), FontId::proportional(13.5), g.text);
@@ -1127,7 +1127,7 @@ fn pill(ui: &mut Ui, g: &Gnome, text: &str) -> egui::Response {
 }
 
 /// Botón de acción sugerida (acento).
-fn suggested(ui: &mut Ui, g: &Gnome, text: &str) -> egui::Response {
+pub(crate) fn suggested(ui: &mut Ui, g: &Gnome, text: &str) -> egui::Response {
     let galley =
         ui.painter()
             .layout_no_wrap(text.to_owned(), FontId::proportional(13.5), g.on_accent);
@@ -1145,7 +1145,7 @@ fn suggested(ui: &mut Ui, g: &Gnome, text: &str) -> egui::Response {
 }
 
 /// `<Alt><Shift>f` como teclas: «Alt» «Shift» «F».
-fn keycaps(ui: &mut Ui, g: &Gnome, binding: &str) -> egui::Response {
+pub(crate) fn keycaps(ui: &mut Ui, g: &Gnome, binding: &str) -> egui::Response {
     let keys: Vec<String> = pretty_binding(binding)
         .split(" + ")
         .map(str::to_string)
@@ -1507,7 +1507,7 @@ fn middle_ellipsis(text: &str, max: usize) -> String {
     format!("{head}…{tail}")
 }
 
-fn autostart_path() -> Option<PathBuf> {
+pub(crate) fn autostart_path() -> Option<PathBuf> {
     Some(
         dirs::config_dir()?
             .join("autostart")
@@ -1516,7 +1516,7 @@ fn autostart_path() -> Option<PathBuf> {
 }
 
 /// Crea o borra el lanzador de inicio automático; devuelve el error para la línea de estado.
-fn set_autostart(enabled: bool, binary: &str) -> Result<(), String> {
+pub(crate) fn set_autostart(enabled: bool, binary: &str) -> Result<(), String> {
     let path = autostart_path().ok_or(t("No config folder"))?;
     let result = if enabled {
         std::fs::create_dir_all(path.parent().unwrap_or(&path)).and_then(|()| {

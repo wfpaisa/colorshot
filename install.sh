@@ -68,7 +68,7 @@ install_from() {
 
     # Launcher and its icon; the windows' app_id is colorshot, like the .desktop file.
     install -Dm644 "${src}/colorshot.svg" "${DATA_DIR}/icons/hicolor/scalable/apps/colorshot.svg"
-    sed "s|^Exec=.*|Exec=${BIN_DIR}/colorshot|" "${src}/colorshot.desktop" |
+    sed "s|^Exec=colorshot|Exec=${BIN_DIR}/colorshot|" "${src}/colorshot.desktop" |
         install -Dm644 /dev/stdin "${DATA_DIR}/applications/colorshot.desktop"
     gtk-update-icon-cache -q -t "${DATA_DIR}/icons/hicolor" >/dev/null 2>&1 || true
 
@@ -103,7 +103,13 @@ install_from() {
     if ((fresh_extension)); then
         warn "Log out and back in once so GNOME loads the ColorShot extension."
     fi
-    info "Start it with: colorshot"
+    # Starts the resident instance; on its first run it opens the welcome guide.
+    if [[ -n "${WAYLAND_DISPLAY:-}${DISPLAY:-}" ]]; then
+        setsid -f "${BIN_DIR}/colorshot" >/dev/null 2>&1 </dev/null || true
+        info "ColorShot is running: its icon is in the top bar"
+    else
+        info "Start it with: colorshot"
+    fi
 }
 
 main() {

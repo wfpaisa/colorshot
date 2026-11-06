@@ -2,9 +2,99 @@
 Type=Application
 Name=colorshot
 Comment=Screenshots with annotations, OCR and pinning
+Comment[es]=Capturas de pantalla con anotaciones, OCR y fijado
 Exec=colorshot
 Icon=colorshot
 Terminal=false
 Categories=Graphics;
 Keywords=screenshot;capture;ocr;annotate;
 StartupWMClass=colorshot
+Actions=area;full;window;ocr;color;palettes;clipboard;prefs;
+
+[Desktop Action area]
+Name=Capture Area
+Name[es]=Capturar área
+Name[pt]=Capturar área
+Name[fr]=Capturer une zone
+Name[de]=Bereich aufnehmen
+Name[ru]=Снимок области
+Name[zh_CN]=截取区域
+Name[ja]=範囲をキャプチャ
+Exec=colorshot area
+
+[Desktop Action full]
+Name=Capture Screen
+Name[es]=Capturar pantalla
+Name[pt]=Capturar tela
+Name[fr]=Capturer l’écran
+Name[de]=Bildschirm aufnehmen
+Name[ru]=Снимок экрана
+Name[zh_CN]=截取屏幕
+Name[ja]=画面をキャプチャ
+Exec=colorshot full
+
+[Desktop Action window]
+Name=Capture Window
+Name[es]=Capturar ventana
+Name[pt]=Capturar janela
+Name[fr]=Capturer une fenêtre
+Name[de]=Fenster aufnehmen
+Name[ru]=Снимок окна
+Name[zh_CN]=截取窗口
+Name[ja]=ウィンドウをキャプチャ
+Exec=colorshot window
+
+[Desktop Action ocr]
+Name=Read Text / QR
+Name[es]=Leer texto / QR
+Name[pt]=Reconhecer texto / QR
+Name[fr]=Reconnaître texte / QR
+Name[de]=Text / QR erkennen
+Name[ru]=Распознать текст / QR
+Name[zh_CN]=识别文字 / 二维码
+Name[ja]=テキスト / QR を認識
+Exec=colorshot ocr
+
+[Desktop Action color]
+Name=Pick Color
+Name[es]=Elegir color
+Name[pt]=Escolher cor
+Name[fr]=Choisir une couleur
+Name[de]=Farbe aufnehmen
+Name[ru]=Выбрать цвет
+Name[zh_CN]=拾取颜色
+Name[ja]=色を取得
+Exec=colorshot color
+
+[Desktop Action palettes]
+Name=Color Palettes
+Name[es]=Paletas de colores
+Name[pt]=Paletas de cores
+Name[fr]=Palettes de couleurs
+Name[de]=Farbpaletten
+Name[ru]=Цветовые палитры
+Name[zh_CN]=调色板
+Name[ja]=カラーパレット
+Exec=colorshot palettes
+
+[Desktop Action clipboard]
+Name=Open from Clipboard
+Name[es]=Abrir del portapapeles
+Name[pt]=Carregar da área de transferência
+Name[fr]=Charger depuis le presse-papiers
+Name[de]=Aus Zwischenablage laden
+Name[ru]=Загрузить из буфера
+Name[zh_CN]=从剪贴板载入
+Name[ja]=クリップボードから読み込む
+Exec=colorshot clipboard
+
+[Desktop Action prefs]
+Name=Preferences
+Name[es]=Preferencias
+Name[pt]=Preferências
+Name[fr]=Préférences
+Name[de]=Einstellungen
+Name[ru]=Настройки
+Name[zh_CN]=偏好设置
+Name[ja]=設定
+Exec=colorshot prefs

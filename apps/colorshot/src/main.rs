@@ -37,6 +37,10 @@ fn main() -> anyhow::Result<()> {
     }
     let (sender, commands) = mpsc::channel();
     colorshot_ui::tray::spawn(runtime.handle(), sender.clone());
+    // El primer arranque abre el asistente de bienvenida.
+    if !colorshot_core::settings::Settings::load().welcome_done {
+        let _ = sender.send(Command::Welcome);
+    }
     std::thread::spawn(move || {
         for stream in owner.listener.incoming().flatten() {
             if let Some(command) = instance::read(stream) {

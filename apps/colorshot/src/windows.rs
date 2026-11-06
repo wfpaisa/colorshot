@@ -1367,6 +1367,47 @@ pub fn run_preferences(runtime: &tokio::runtime::Runtime) -> anyhow::Result<()> 
     )
     .map_err(|e| anyhow::anyhow!("{e}"))
 }
+/// Asistente de bienvenida, del tamaño de Preferencias.
+pub fn run_welcome() -> anyhow::Result<()> {
+    let binary = crate::exe()?.display().to_string();
+    let gnome = theme::Gnome::current();
+    eframe::run_native(
+        "colorshot welcome",
+        native(
+            ViewportBuilder::default()
+                .with_title("Welcome to ColorShot")
+                .with_inner_size(colorshot_ui::welcome::SIZE)
+                .with_resizable(false)
+                .with_decorations(false)
+                .with_transparent(true),
+        ),
+        Box::new(move |cc| {
+            theme::apply_gnome(&cc.egui_ctx, &gnome);
+            Ok(Box::new(WelcomeApp {
+                welcome: colorshot_ui::welcome::Welcome::new(binary, gnome),
+            }))
+        }),
+    )
+    .map_err(|e| anyhow::anyhow!("{e}"))
+}
+struct WelcomeApp {
+    welcome: colorshot_ui::welcome::Welcome,
+}
+impl eframe::App for WelcomeApp {
+    fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
+        [0.; 4]
+    }
+
+    fn raw_input_hook(&mut self, ctx: &egui::Context, raw: &mut egui::RawInput) {
+        frame::release_hook(ctx, raw);
+    }
+
+    fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
+        ui.set_opacity(transition::appear(ui.ctx()));
+        self.welcome.ui(ui);
+    }
+}
+
 /// Ventana de paletas: con el esquema de GNOME, redimensionable y con el marco propio.
 pub fn run_palettes() -> anyhow::Result<()> {
     let binary = crate::exe()?.display().to_string();

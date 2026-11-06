@@ -145,6 +145,13 @@ impl ksni::Tray for Tray {
                         "16-menu-clipboard",
                         Command::Clipboard,
                     ),
+                    MenuItem::Separator,
+                    self.glyph_item(
+                        t("Welcome Guide"),
+                        "16-menu-welcome",
+                        egui_phosphor::regular::HAND_WAVING,
+                        Command::Welcome,
+                    ),
                 ],
                 ..Default::default()
             }
@@ -161,13 +168,15 @@ impl ksni::Tray for Tray {
     }
 }
 
-/// Publica el icono; si no hay bandeja (GNOME sin la extensión AppIndicator) solo avisa.
+/// Publica el icono. Al iniciar sesión la instancia suele arrancar antes que la extensión
+/// AppIndicator: el icono se registra cuando aparece la bandeja, sin rendirse al primer fallo.
 pub fn spawn(runtime: &tokio::runtime::Handle, commands: Sender<Command>) {
     runtime.spawn(async move {
         let handle = match (Tray {
             commands,
             tint: menu_tint(),
         })
+        .assume_sni_available(true)
         .spawn()
         .await
         {

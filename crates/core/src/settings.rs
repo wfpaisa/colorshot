@@ -118,6 +118,8 @@ pub struct Settings {
     pub glass_tint: u8,
     /// Con frosted glass, del gris del tema (0) al negro (100), en %.
     pub glass_shade: u8,
+    /// Ya se mostró el asistente de bienvenida (se abre al primer arranque de la instancia).
+    pub welcome_done: bool,
 }
 
 impl Default for Settings {
@@ -139,6 +141,7 @@ impl Default for Settings {
             frosted_glass: false,
             glass_tint: 60,
             glass_shade: 0,
+            welcome_done: false,
         }
     }
 }

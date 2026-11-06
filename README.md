@@ -102,12 +102,17 @@ Start the resident instance (it adds the tray icon):
 colorshot
 ```
 
-Then use the tray menu, the global shortcuts (add them in **Preferences → Shortcuts**) or the
-CLI:
+The first time it starts (right after `install.sh`), a welcome guide explains how ColorShot
+works, installs and enables the GNOME extension, adds the global shortcuts and turns on
+**Launch at startup**. Open it again from the tray menu (**More → Welcome Guide**) or with
+`colorshot welcome`.
+
+Then use the tray menu, the global shortcuts (add them in **Preferences → Shortcuts**), the
+launcher menu (right-click ColorShot in the dock or app grid) or the CLI:
 
 ```text
 colorshot [area | full | window | ocr | color | palettes | repeat | delayed |
-           clipboard | open | prefs | edit <file> | pin <file> | quit | --version]
+           clipboard | open | prefs | welcome | edit <file> | pin <file> | quit | --version]
 ```
 
 | Default shortcut | Action |

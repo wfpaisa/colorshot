@@ -44,6 +44,7 @@ pub fn run(command: &Command, runtime: &Runtime) -> anyhow::Result<()> {
             image: clipboard_image()?,
         }),
         Command::Preferences => windows::run_preferences(runtime),
+        Command::Welcome => windows::run_welcome(),
         Command::Palettes => windows::run_palettes(),
         Command::Pin(path) => windows::run_pin(path),
         Command::Preview(path) => windows::run_preview(runtime, path),

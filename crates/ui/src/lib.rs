@@ -14,3 +14,4 @@ pub mod tablet;
 pub mod theme;
 pub mod transition;
 pub mod tray;
+pub mod welcome;
