@@ -51,9 +51,9 @@ pub fn run(command: &Command, runtime: &Runtime) -> anyhow::Result<()> {
                 })?;
             Ok(())
         }
-        // Sin pasar por `Edit`: la temporal no se borra, así se puede volver a abrir.
+        // La copia de la última captura o, si es más nueva, la guardada en la carpeta.
         Command::Last => {
-            let dirs = [Settings::load().save_dir()?, save::temp_dir()];
+            let dirs = [Settings::load().save_dir()?, save::last_dir()];
             let path = save::latest(&dirs).context(t("No captures yet"))?;
             let image = image::open(&path)
                 .with_context(|| colorshot_core::i18n::tf("Could not open {}", &[&path.display()]))?
@@ -78,7 +78,9 @@ fn area(runtime: &Runtime) -> anyhow::Result<()> {
     let warm = if editor { Warm::none() } else { Warm::start() };
     if let Some((image, from)) = select(runtime)? {
         if editor {
-            return windows::spawn("edit", &image, None);
+            windows::spawn("edit", &image, None)?;
+            remember(&image);
+            return Ok(());
         }
         deliver(image, Some(from), warm)?;
     }
@@ -448,14 +450,28 @@ fn repeat(runtime: &Runtime) -> anyhow::Result<()> {
 /// Con miniatura, todo pasa a su proceso (`warm`, ya arrancado si se pudo): recibe los píxeles
 /// en crudo y guarda mientras se muestra; aquí solo se copia, con un PNG rápido.
 fn deliver(image: image::RgbaImage, from: Option<From>, warm: Warm) -> anyhow::Result<()> {
+    hand_over(&image, from, warm)?;
+    remember(&image);
+    Ok(())
+}
+
+/// Copia de la última captura para «Editar último»; se hace después de entregarla para no
+/// retrasar la miniatura.
+fn remember(image: &image::RgbaImage) {
+    if let Err(error) = save::encode_fast(image).and_then(|png| save::remember_last(&png)) {
+        log::warn!("Could not keep the last capture: {error}");
+    }
+}
+
+fn hand_over(image: &image::RgbaImage, from: Option<From>, warm: Warm) -> anyhow::Result<()> {
     let settings = Settings::load();
     if !settings.show_after_capture {
         if settings.save_after_capture {
-            let path = save::save_with(&image, settings.save_dir()?, settings.format)?;
+            let path = save::save_with(image, settings.save_dir()?, settings.format)?;
             println!("{}", path.display());
         }
         if settings.copy_after_capture {
-            clipboard::copy_image(&image)?;
+            clipboard::copy_image(image)?;
         }
         return Ok(());
     }
@@ -463,7 +479,7 @@ fn deliver(image: image::RgbaImage, from: Option<From>, warm: Warm) -> anyhow::R
     // Se copia aquí, antes de que aparezca la miniatura: en GNOME wl-copy necesita el foco y
     // una ventana nueva se lo quita (queda esperando con «wl-clipboard is ready»).
     let copied = settings.copy_after_capture
-        && match save::encode_fast(&image)
+        && match save::encode_fast(image)
             .map_err(anyhow::Error::from)
             .and_then(|png| Ok(clipboard::copy_png(&png)?))
         {
@@ -474,7 +490,7 @@ fn deliver(image: image::RgbaImage, from: Option<From>, warm: Warm) -> anyhow::R
             }
         };
     log::info!("deliver: copied in {:?}", started.elapsed());
-    warm.send(&image, from, copied)?;
+    warm.send(image, from, copied)?;
     log::info!("deliver: sent in {:?}", started.elapsed());
     Ok(())
 }

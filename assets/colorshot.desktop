@@ -9,7 +9,9 @@ Terminal=false
 Categories=Graphics;
 Keywords=screenshot;capture;ocr;annotate;
 StartupWMClass=colorshot
-Actions=area;full;window;ocr;color;palettes;last;folder;prefs;
+# Sin esto GNOME añade «New Window», que solo vuelve a lanzar el proceso de la bandeja.
+SingleMainWindow=true
+Actions=area;full;window;ocr;color;palettes;last;folder;prefs;welcome;
 
 [Desktop Action area]
 Name=Capture Area
@@ -109,3 +111,14 @@ Name[ru]=Настройки
 Name[zh_CN]=偏好设置
 Name[ja]=設定
 Exec=colorshot prefs
+
+[Desktop Action welcome]
+Name=Welcome Guide
+Name[es]=Guía de bienvenida
+Name[pt]=Guia de boas-vindas
+Name[fr]=Guide de bienvenue
+Name[de]=Willkommensassistent
+Name[ru]=Мастер приветствия
+Name[zh_CN]=欢迎向导
+Name[ja]=ようこそガイド
+Exec=colorshot welcome

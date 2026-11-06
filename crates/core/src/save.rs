@@ -56,7 +56,7 @@ pub fn purge_temp(age: std::time::Duration) {
     }
 }
 
-/// La imagen más reciente entre `dirs` (la carpeta de capturas y la temporal), para
+/// La imagen más reciente entre `dirs` (la carpeta de capturas y `last_dir`), para
 /// «Editar último».
 pub fn latest(dirs: &[PathBuf]) -> Option<PathBuf> {
     dirs.iter()
@@ -70,6 +70,25 @@ pub fn latest(dirs: &[PathBuf]) -> Option<PathBuf> {
         .filter_map(|e| Some((e.metadata().ok()?.modified().ok()?, e.path())))
         .max_by_key(|(time, _)| *time)
         .map(|(_, path)| path)
+}
+
+/// Carpeta con la copia de la última captura (área, ventana o pantalla), aparte de las
+/// temporales: esas se borran al cargarlas y aquí «Editar último» siempre la encuentra.
+pub fn last_dir() -> PathBuf {
+    dirs::runtime_dir()
+        .unwrap_or_else(std::env::temp_dir)
+        .join("colorshot-last")
+}
+
+/// Sustituye la copia de la última captura; se escribe aparte y se renombra para que
+/// «Editar último» nunca lea un PNG a medias.
+pub fn remember_last(png: &[u8]) -> Result<(), SaveError> {
+    let dir = last_dir();
+    std::fs::create_dir_all(&dir)?;
+    let partial = dir.join(".last.png.part");
+    std::fs::write(&partial, png)?;
+    std::fs::rename(partial, dir.join("last.png"))?;
+    Ok(())
 }
 
 pub fn default_dir() -> Result<PathBuf, SaveError> {
