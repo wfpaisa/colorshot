@@ -68,14 +68,14 @@ pub async fn gnome_monitors() -> Result<Vec<Monitor>, ashpd::zbus::Error> {
 }
 
 /// Marco de cada ventana visible (x, y, ancho, alto en coordenadas lógicas), de la de arriba a
-/// la de abajo. Lo da la extensión de GNOME `rapidshot@wfelipe.com`.
+/// la de abajo. Lo da la extensión de GNOME `colorshot@wfelipe.com`.
 pub async fn gnome_windows() -> Result<Vec<(i32, i32, i32, i32)>, ashpd::zbus::Error> {
     let connection = ashpd::zbus::Connection::session().await?;
     let reply = connection
         .call_method(
-            Some("com.wfelipe.RapidShot"),
-            "/com/wfelipe/RapidShot",
-            Some("com.wfelipe.RapidShot"),
+            Some("com.wfelipe.ColorShot"),
+            "/com/wfelipe/ColorShot",
+            Some("com.wfelipe.ColorShot"),
             "Windows",
             &(),
         )

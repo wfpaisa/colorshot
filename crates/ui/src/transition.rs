@@ -13,7 +13,7 @@ pub const APPEAR: Duration = Duration::from_millis(160);
 /// Opacidad 0..=1 de la ventana mientras aparece, contando desde la primera vez que se pide
 /// en este contexto. Pide cuadros hasta terminar.
 pub fn appear(ctx: &egui::Context) -> f32 {
-    let id = egui::Id::new("rapidshot-appear");
+    let id = egui::Id::new("colorshot-appear");
     let now = Instant::now();
     let start = ctx.data_mut(|d| *d.get_temp_mut_or_insert_with(id, || now));
     let t = now.duration_since(start).as_secs_f32() / APPEAR.as_secs_f32();

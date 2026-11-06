@@ -2,7 +2,7 @@
 use crate::theme::Tokens;
 use egui::{self, TextureHandle};
 use egui_phosphor::regular;
-use rapidshot_core::i18n::t;
+use colorshot_core::i18n::t;
 use std::{
     path::PathBuf,
     time::{Duration, Instant},

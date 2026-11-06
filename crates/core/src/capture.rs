@@ -102,7 +102,7 @@ pub async fn capture_full() -> Result<Capture, CaptureError> {
     Err(CaptureError::Unavailable(error.to_string()))
 }
 /// Solo una zona, en coordenadas lógicas del escritorio, con la extensión de GNOME
-/// `rapidshot@wfelipe.com`. El portal codifica todos los monitores en un PNG (más de un
+/// `colorshot@wfelipe.com`. El portal codifica todos los monitores en un PNG (más de un
 /// segundo con dos monitores HiDPI); así GNOME codifica solo la zona. La extensión solo
 /// atiende al proceso con el selector abierto.
 pub async fn capture_area(x: i32, y: i32, w: u32, h: u32) -> Result<Capture, CaptureError> {
@@ -114,9 +114,9 @@ pub async fn capture_area(x: i32, y: i32, w: u32, h: u32) -> Result<Capture, Cap
         ashpd::zbus::Connection::session()
             .await?
             .call_method(
-                Some("com.wfelipe.RapidShot"),
-                "/com/wfelipe/RapidShot",
-                Some("com.wfelipe.RapidShot"),
+                Some("com.wfelipe.ColorShot"),
+                "/com/wfelipe/ColorShot",
+                Some("com.wfelipe.ColorShot"),
                 "Area",
                 &(x, y, w as i32, h as i32, name),
             )
@@ -132,7 +132,7 @@ pub async fn capture_area(x: i32, y: i32, w: u32, h: u32) -> Result<Capture, Cap
 /// Un directorio privado evita colisiones y enlaces sobre el archivo temporal.
 fn private_dir() -> std::io::Result<std::path::PathBuf> {
     let dir = std::env::temp_dir().join(format!(
-        "rapidshot-{}-{}",
+        "colorshot-{}-{}",
         std::process::id(),
         chrono::Utc::now().timestamp_nanos_opt().unwrap_or_default()
     ));

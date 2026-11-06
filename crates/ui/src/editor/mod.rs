@@ -223,7 +223,7 @@ impl Editor {
     fn copy_color(&mut self, ctx: &egui::Context, color: Color32) {
         let text = self.color_format.text(color);
         ctx.copy_text(text.clone());
-        self.notify(rapidshot_core::i18n::tf("Copied {}", &[&text]));
+        self.notify(colorshot_core::i18n::tf("Copied {}", &[&text]));
     }
     pub(super) fn autoadjust(&mut self) {
         if let Some(zone) = &mut self.crop {

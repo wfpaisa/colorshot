@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publishes a new RapidShot release on GitHub.
+# Publishes a new ColorShot release on GitHub.
 #
 #   ./release.sh            bump the patch version (0.1.0 -> 0.1.1)
 #   ./release.sh 0.2.0      release that version
@@ -9,8 +9,8 @@
 # release with `gh`. If anything fails before pushing, Cargo.toml and Cargo.lock are restored.
 set -euo pipefail
 
-REPO="wfpaisa/rapidshot"
-ASSET="dist/rapidshot-x86_64-linux.tar.gz"
+REPO="wfpaisa/colorshot"
+ASSET="dist/colorshot-x86_64-linux.tar.gz"
 
 info() { printf '\033[1;34m::\033[0m %s\n' "$*"; }
 die() { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; exit 1; }
@@ -65,6 +65,6 @@ git push --quiet origin main
 
 info "Creating the GitHub release"
 gh release create "$tag" "$ASSET" "$ASSET.sha256" \
-    --repo "$REPO" --target main --title "RapidShot $tag" --generate-notes
+    --repo "$REPO" --target main --title "ColorShot $tag" --generate-notes
 
 info "Done: https://github.com/$REPO/releases/tag/$tag"

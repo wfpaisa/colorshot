@@ -3,9 +3,9 @@ use ksni::{
     MenuItem, TrayMethods,
     menu::{StandardItem, SubMenu},
 };
-use rapidshot_core::command::Command;
-use rapidshot_core::i18n::{self, t};
-use rapidshot_core::settings::Settings;
+use colorshot_core::command::Command;
+use colorshot_core::i18n::{self, t};
+use colorshot_core::settings::Settings;
 use std::sync::mpsc::Sender;
 
 struct Tray {
@@ -75,14 +75,14 @@ fn item(label: &str, command: Command) -> StandardItem<Tray> {
 
 impl ksni::Tray for Tray {
     fn id(&self) -> String {
-        "rapidshot".into()
+        "colorshot".into()
     }
     fn title(&self) -> String {
-        "rapidshot".into()
+        "colorshot".into()
     }
     fn icon_name(&self) -> String {
         // Con nombre, AppIndicator ignora el pixmap.
-        if crate::icons::load("16-menu-rapidshot").is_some() {
+        if crate::icons::load("16-menu-colorshot").is_some() {
             String::new()
         } else {
             "applets-screenshooter".into()
@@ -90,7 +90,7 @@ impl ksni::Tray for Tray {
     }
     // El icono propio si está instalado; si no, el del tema.
     fn icon_pixmap(&self) -> Vec<ksni::Icon> {
-        crate::icons::load("16-menu-rapidshot")
+        crate::icons::load("16-menu-colorshot")
             .map(|image| {
                 // ksni espera ARGB32 en orden de red.
                 let data = image

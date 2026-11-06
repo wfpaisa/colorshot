@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
-# Installs (or updates) RapidShot for the current user from the latest GitHub release.
+# Installs (or updates) ColorShot for the current user from the latest GitHub release.
 #
-#   curl -fsSL https://raw.githubusercontent.com/wfpaisa/rapidshot/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/wfpaisa/colorshot/main/install.sh | bash
 #
 # Options:
 #   --version vX.Y.Z   install that release instead of the latest
-#   --uninstall        remove RapidShot (settings in ~/.config/rapidshot are kept)
+#   --uninstall        remove ColorShot (settings in ~/.config/colorshot are kept)
 #
 # Run from an extracted release archive, it installs the files next to it.
 set -euo pipefail
 
-REPO="wfpaisa/rapidshot"
-ASSET="rapidshot-x86_64-linux.tar.gz"
-UUID="rapidshot@wfelipe.com"
+REPO="wfpaisa/colorshot"
+ASSET="colorshot-x86_64-linux.tar.gz"
+UUID="colorshot@wfelipe.com"
 BIN_DIR="${HOME}/.local/bin"
 DATA_DIR="${XDG_DATA_HOME:-${HOME}/.local/share}"
 
@@ -22,8 +22,8 @@ die() { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; exit 1; }
 
 # Stops the resident instance so the binary can be replaced.
 stop_running() {
-    if pgrep -x rapidshot >/dev/null 2>&1; then
-        "${BIN_DIR}/rapidshot" quit >/dev/null 2>&1 || pkill -x rapidshot || true
+    if pgrep -x colorshot >/dev/null 2>&1; then
+        "${BIN_DIR}/colorshot" quit >/dev/null 2>&1 || pkill -x colorshot || true
         sleep 1
     fi
 }
@@ -33,11 +33,11 @@ uninstall() {
     if command -v gnome-extensions >/dev/null 2>&1; then
         gnome-extensions disable "${UUID}" >/dev/null 2>&1 || true
     fi
-    rm -f "${BIN_DIR}/rapidshot" \
-        "${DATA_DIR}/applications/rapidshot.desktop" \
-        "${DATA_DIR}/icons/hicolor/scalable/apps/rapidshot.svg"
-    rm -rf "${DATA_DIR}/rapidshot/icons" "${DATA_DIR}/gnome-shell/extensions/${UUID}"
-    info "RapidShot removed. Settings are still in ~/.config/rapidshot."
+    rm -f "${BIN_DIR}/colorshot" \
+        "${DATA_DIR}/applications/colorshot.desktop" \
+        "${DATA_DIR}/icons/hicolor/scalable/apps/colorshot.svg"
+    rm -rf "${DATA_DIR}/colorshot/icons" "${DATA_DIR}/gnome-shell/extensions/${UUID}"
+    info "ColorShot removed. Settings are still in ~/.config/colorshot."
 }
 
 # Downloads the release archive (and its checksum) into $1 and extracts it there.
@@ -61,19 +61,19 @@ download() {
 
 install_from() {
     local src="$1" fresh_extension=0
-    [[ -x "${src}/rapidshot" ]] || die "No rapidshot binary in ${src}."
+    [[ -x "${src}/colorshot" ]] || die "No colorshot binary in ${src}."
 
     stop_running
-    install -Dm755 "${src}/rapidshot" "${BIN_DIR}/rapidshot"
+    install -Dm755 "${src}/colorshot" "${BIN_DIR}/colorshot"
 
-    # Launcher and its icon; the windows' app_id is rapidshot, like the .desktop file.
-    install -Dm644 "${src}/rapidshot.svg" "${DATA_DIR}/icons/hicolor/scalable/apps/rapidshot.svg"
-    sed "s|^Exec=.*|Exec=${BIN_DIR}/rapidshot|" "${src}/rapidshot.desktop" |
-        install -Dm644 /dev/stdin "${DATA_DIR}/applications/rapidshot.desktop"
+    # Launcher and its icon; the windows' app_id is colorshot, like the .desktop file.
+    install -Dm644 "${src}/colorshot.svg" "${DATA_DIR}/icons/hicolor/scalable/apps/colorshot.svg"
+    sed "s|^Exec=.*|Exec=${BIN_DIR}/colorshot|" "${src}/colorshot.desktop" |
+        install -Dm644 /dev/stdin "${DATA_DIR}/applications/colorshot.desktop"
     gtk-update-icon-cache -q -t "${DATA_DIR}/icons/hicolor" >/dev/null 2>&1 || true
 
     # Interface icons, read at runtime.
-    install -Dm644 -t "${DATA_DIR}/rapidshot/icons" "${src}"/icons/*.svg
+    install -Dm644 -t "${DATA_DIR}/colorshot/icons" "${src}"/icons/*.svg
 
     # GNOME Shell extension for Capture Window and area-only captures.
     [[ -d "${DATA_DIR}/gnome-shell/extensions/${UUID}" ]] || fresh_extension=1
@@ -82,7 +82,7 @@ install_from() {
         gnome-extensions enable "${UUID}" >/dev/null 2>&1 || true
     fi
 
-    info "Installed $("${BIN_DIR}/rapidshot" --version 2>/dev/null || echo rapidshot) to ${BIN_DIR}/rapidshot"
+    info "Installed $("${BIN_DIR}/colorshot" --version 2>/dev/null || echo colorshot) to ${BIN_DIR}/colorshot"
 
     case ":${PATH}:" in
         *":${BIN_DIR}:"*) ;;
@@ -101,9 +101,9 @@ install_from() {
     fi
 
     if ((fresh_extension)); then
-        warn "Log out and back in once so GNOME loads the RapidShot extension."
+        warn "Log out and back in once so GNOME loads the ColorShot extension."
     fi
-    info "Start it with: rapidshot"
+    info "Start it with: colorshot"
 }
 
 main() {
@@ -133,7 +133,7 @@ main() {
     if [[ -n "${BASH_SOURCE[0]:-}" && -f "${BASH_SOURCE[0]}" ]]; then
         here="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     fi
-    if [[ -z "${version}" && -n "${here}" && -x "${here}/rapidshot" ]]; then
+    if [[ -z "${version}" && -n "${here}" && -x "${here}/colorshot" ]]; then
         install_from "${here}"
         return
     fi
@@ -144,7 +144,7 @@ main() {
     # shellcheck disable=SC2064
     trap "rm -rf '${tmp}'" EXIT
     download "${tmp}" "${version}"
-    install_from "${tmp}/rapidshot"
+    install_from "${tmp}/colorshot"
 }
 
 main "$@"

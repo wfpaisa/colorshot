@@ -18,7 +18,7 @@ pub enum SaveError {
 pub fn temp_dir() -> PathBuf {
     dirs::runtime_dir()
         .unwrap_or_else(std::env::temp_dir)
-        .join("rapidshot-images")
+        .join("colorshot-images")
 }
 
 pub fn is_temp(path: &Path) -> bool {
@@ -139,7 +139,7 @@ pub fn save_bytes(bytes: &[u8], ext: &str, dir: impl AsRef<Path>) -> Result<Path
 pub fn save_last_area(rect: crate::capture::Rect) -> Result<(), SaveError> {
     let dir = dirs::config_dir()
         .ok_or(SaveError::NoConfig)?
-        .join("rapidshot");
+        .join("colorshot");
     std::fs::create_dir_all(&dir)?;
     std::fs::write(dir.join("last-area.ron"), ron::to_string(&rect)?)?;
     Ok(())
@@ -147,7 +147,7 @@ pub fn save_last_area(rect: crate::capture::Rect) -> Result<(), SaveError> {
 
 /// Última zona confirmada, para «Repeat Area Capture».
 pub fn load_last_area() -> Option<crate::capture::Rect> {
-    let path = dirs::config_dir()?.join("rapidshot").join("last-area.ron");
+    let path = dirs::config_dir()?.join("colorshot").join("last-area.ron");
     ron::from_str(&std::fs::read_to_string(path).ok()?).ok()
 }
 

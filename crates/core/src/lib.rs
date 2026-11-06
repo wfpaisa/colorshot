@@ -1,4 +1,4 @@
-//! rapidshot-core: captura, ajustes e imagen, sin UI.
+//! colorshot-core: captura, ajustes e imagen, sin UI.
 pub mod capture;
 pub mod clipboard;
 pub mod command;

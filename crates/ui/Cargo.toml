@@ -1,11 +1,11 @@
 [package]
-name = "rapidshot-ui"
+name = "colorshot-ui"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 
 [dependencies]
-rapidshot-core = { path = "../core" }
+colorshot-core = { path = "../core" }
 egui = "0.36"
 egui-phosphor = "0.14"
 eframe = { version = "0.36", default-features = false, features = ["default_fonts", "glow", "x11", "wayland", "persistence", "accesskit"] }

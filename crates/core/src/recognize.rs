@@ -28,7 +28,7 @@ pub enum RecognizeError {
 /// Primero busca códigos (son exactos); si no hay, reconoce texto.
 pub fn recognize(image: &RgbaImage) -> Result<Recognized, RecognizeError> {
     let dir = dirs::runtime_dir().unwrap_or_else(std::env::temp_dir);
-    let path = dir.join(format!("rapidshot-ocr-{}.png", std::process::id()));
+    let path = dir.join(format!("colorshot-ocr-{}.png", std::process::id()));
     // Texto pequeño se reconoce mejor ampliado; tesseract prefiere letras de ~30 px.
     let scaled;
     let image = if image.height() < 400 {

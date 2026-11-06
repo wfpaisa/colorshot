@@ -1,4 +1,4 @@
-//! Preferencias persistentes en ~/.config/rapidshot/settings.ron.
+//! Preferencias persistentes en ~/.config/colorshot/settings.ron.
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
@@ -144,7 +144,7 @@ impl Default for Settings {
 }
 
 fn path() -> Option<PathBuf> {
-    Some(dirs::config_dir()?.join("rapidshot").join("settings.ron"))
+    Some(dirs::config_dir()?.join("colorshot").join("settings.ron"))
 }
 
 impl Settings {

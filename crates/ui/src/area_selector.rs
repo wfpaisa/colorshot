@@ -3,8 +3,8 @@
 use crate::selection;
 use egui::{Color32, Context, CursorIcon, Pos2, Rect as UiRect, Stroke, StrokeKind, Vec2};
 use image::RgbaImage;
-use rapidshot_core::capture::Rect;
-use rapidshot_core::i18n::t;
+use colorshot_core::capture::Rect;
+use colorshot_core::i18n::t;
 
 #[derive(Clone, Copy)]
 pub enum SelectorResult {

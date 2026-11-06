@@ -1,5 +1,5 @@
 //! Geometría de selección en píxeles físicos, independiente del contexto gráfico.
-use rapidshot_core::capture::Rect;
+use colorshot_core::capture::Rect;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Handle {
     Nw,

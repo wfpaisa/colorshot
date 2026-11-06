@@ -7,7 +7,7 @@ use egui::{
     Align2, Color32, CursorIcon, FontId, Pos2, Rect, Sense, Stroke, StrokeKind, TextureHandle, Ui,
     Vec2, pos2, vec2,
 };
-use rapidshot_core::i18n::t;
+use colorshot_core::i18n::t;
 use std::time::{Duration, Instant};
 
 #[derive(Clone, Copy, Debug, PartialEq)]

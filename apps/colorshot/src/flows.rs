@@ -2,8 +2,8 @@
 use crate::windows;
 use anyhow::Context;
 use eframe::egui;
-use rapidshot_core::i18n::t;
-use rapidshot_core::{
+use colorshot_core::i18n::t;
+use colorshot_core::{
     capture::{self, Capture, Rect},
     clipboard,
     command::Command,
@@ -12,7 +12,7 @@ use rapidshot_core::{
     save,
     settings::{AreaShows, ScreenCapture, Settings},
 };
-use rapidshot_ui::area_selector::{AreaSelector, SelectorResult};
+use colorshot_ui::area_selector::{AreaSelector, SelectorResult};
 use std::sync::Arc;
 use tokio::runtime::{Handle, Runtime};
 
@@ -31,7 +31,7 @@ pub fn run(command: &Command, runtime: &Runtime) -> anyhow::Result<()> {
         Command::Color => pick_color(runtime),
         Command::Edit(path) => {
             let image = image::open(path)
-                .with_context(|| rapidshot_core::i18n::tf("Could not open {}", &[&path.display()]))?
+                .with_context(|| colorshot_core::i18n::tf("Could not open {}", &[&path.display()]))?
                 .into_rgba8();
             windows::forget_temp(path);
             windows::run_editor(Capture { image })
@@ -271,13 +271,13 @@ fn pick_color(runtime: &Runtime) -> anyhow::Result<()> {
     if let Some((_, SelectorResult::Color(rgb), _)) =
         windows::run_selector(selectors, &screens, None)?
     {
-        let text = rapidshot_ui::editor::color_text(rgb);
+        let text = colorshot_ui::editor::color_text(rgb);
         clipboard::copy_text(&text)?;
         // A «Picked colors» de la ventana de paletas; por la salida, para quien lo lanzó.
         save_picked(rgb);
         println!("#{}", palettes::hex(rgb));
         let _ = std::process::Command::new("notify-send")
-            .args(["--app-name=rapidshot", t("Color copied"), &text])
+            .args(["--app-name=colorshot", t("Color copied"), &text])
             .spawn()
             .and_then(|mut child| child.wait());
     }
@@ -312,7 +312,7 @@ fn window(runtime: &Runtime) -> anyhow::Result<()> {
             let capture = runtime.block_on(capture::capture_interactive()).map_err(|error| {
                 log::warn!("Interactive portal failed: {error}");
                 anyhow::anyhow!(
-                    t("Capture Window needs the RapidShot GNOME extension. Run just install and log in again.")
+                    t("Capture Window needs the ColorShot GNOME extension. Run just install and log in again.")
                         .to_string()
                 )
             })?;
@@ -372,7 +372,7 @@ pub fn notify_result(found: &Recognized) -> anyhow::Result<&'static str> {
     clipboard::copy_text(text)?;
     let preview: String = text.chars().take(200).collect();
     let _ = std::process::Command::new("notify-send")
-        .args(["--app-name=rapidshot", title, &preview])
+        .args(["--app-name=colorshot", title, &preview])
         .spawn()
         .and_then(|mut child| child.wait());
     Ok(title)
@@ -469,7 +469,7 @@ fn save_temp(png: &[u8]) -> anyhow::Result<std::path::PathBuf> {
     Ok(save::save_bytes(png, "png", dir)?)
 }
 
-/// `rapidshot <verb> <png>` con la zona de origen en `windows::FROM`.
+/// `colorshot <verb> <png>` con la zona de origen en `windows::FROM`.
 fn spawn_with_from(
     verb: &str,
     path: &std::path::Path,

@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=rapidshot
+Name=colorshot
 Comment=Screenshots with annotations, OCR and pinning
-Exec=rapidshot
-Icon=rapidshot
+Exec=colorshot
+Icon=colorshot
 Terminal=false
 Categories=Graphics;
 Keywords=screenshot;capture;ocr;annotate;
-StartupWMClass=rapidshot
+StartupWMClass=colorshot

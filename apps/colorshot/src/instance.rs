@@ -1,5 +1,5 @@
 //! Instancia única por sesión: el primero escucha en un socket, los demás le envían la orden.
-use rapidshot_core::command::Command;
+use colorshot_core::command::Command;
 use std::{
     io::{self, BufRead, BufReader, Write},
     os::unix::net::{UnixListener, UnixStream},
@@ -16,7 +16,7 @@ pub struct Instance {
 pub fn socket_path() -> PathBuf {
     dirs::runtime_dir()
         .unwrap_or_else(std::env::temp_dir)
-        .join("rapidshot.sock")
+        .join("colorshot.sock")
 }
 
 /// `Ok(None)` si otra instancia recibió la orden.

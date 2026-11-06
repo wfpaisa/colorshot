@@ -8,8 +8,8 @@ use crate::frame;
 use crate::theme::Gnome;
 use egui::{Align2, Color32, FontId, Rect, RichText, Sense, Stroke, Ui, vec2};
 use egui_phosphor::regular as icon;
-use rapidshot_core::i18n::{self, Language, t, tf};
-use rapidshot_core::{
+use colorshot_core::i18n::{self, Language, t, tf};
+use colorshot_core::{
     hotkeys,
     monitors::Monitor,
     palettes::{Palettes, Secondary, View},
@@ -77,8 +77,8 @@ impl Preferences {
         let mut preferences = Self {
             gnome,
             settings,
-            // `RAPIDSHOT_TAB=shortcuts|advanced` abre otra sección (para revisarla sin ratón).
-            tab: match std::env::var("RAPIDSHOT_TAB").as_deref() {
+            // `COLORSHOT_TAB=shortcuts|advanced` abre otra sección (para revisarla sin ratón).
+            tab: match std::env::var("COLORSHOT_TAB").as_deref() {
                 Ok("shortcuts") => Tab::Hotkeys,
                 Ok("advanced") => Tab::Advanced,
                 _ => Tab::General,
@@ -92,7 +92,7 @@ impl Preferences {
             installed: Vec::new(),
             recording: None,
             pending: None,
-            engines: rapidshot_core::recognize::engines(),
+            engines: colorshot_core::recognize::engines(),
             color_format: EditorPrefs::load().color_format,
             palette_view: View::default(),
             palette_secondary: Secondary::default(),
@@ -216,7 +216,7 @@ impl Preferences {
         let name = painter.text(
             logo.right_center() + vec2(10., 0.),
             Align2::LEFT_CENTER,
-            "RapidShot",
+            "ColorShot",
             FontId::proportional(14.),
             g.text,
         );
@@ -640,7 +640,7 @@ impl Preferences {
                         recorder(ui, &g, self.pending)
                     } else {
                         keycaps(ui, &g, &binding)
-                            .on_hover_text(tf("Click to change · rapidshot {}", &[command]))
+                            .on_hover_text(tf("Click to change · colorshot {}", &[command]))
                     };
                     if response.clicked() {
                         self.recording = if recording { None } else { Some(i) };
@@ -774,7 +774,7 @@ impl Preferences {
                     "tesseract",
                     tesseract,
                     t("Reads text"),
-                    rapidshot_core::recognize::install_hint(),
+                    colorshot_core::recognize::install_hint(),
                 ),
                 ("zbarimg", zbarimg, t("Reads QR and bar codes"), "zbar"),
             ] {
@@ -1511,7 +1511,7 @@ fn autostart_path() -> Option<PathBuf> {
     Some(
         dirs::config_dir()?
             .join("autostart")
-            .join("rapidshot.desktop"),
+            .join("colorshot.desktop"),
     )
 }
 
@@ -1523,8 +1523,8 @@ fn set_autostart(enabled: bool, binary: &str) -> Result<(), String> {
             std::fs::write(
                 &path,
                 format!(
-                    "[Desktop Entry]\nType=Application\nName=rapidshot\nExec={binary}\n\
-                     Icon=rapidshot\nX-GNOME-Autostart-enabled=true\n"
+                    "[Desktop Entry]\nType=Application\nName=colorshot\nExec={binary}\n\
+                     Icon=colorshot\nX-GNOME-Autostart-enabled=true\n"
                 ),
             )
         })
@@ -1585,7 +1585,7 @@ fn export_palettes() -> Option<String> {
         path.push_str(".ase");
     }
     Some(
-        match std::fs::write(&path, rapidshot_core::swatches::to_ase(&saved)) {
+        match std::fs::write(&path, colorshot_core::swatches::to_ase(&saved)) {
             Ok(()) => tf("Exported {} palettes", &[&saved.len()]),
             Err(error) => tf("Could not export palettes: {}", &[&error]),
         },
@@ -1601,7 +1601,7 @@ fn import_palettes() -> Option<String> {
         Ok(bytes) => bytes,
         Err(error) => return Some(tf("Could not import palettes: {}", &[&error])),
     };
-    let list = match rapidshot_core::swatches::import(&bytes, t("Imported")) {
+    let list = match colorshot_core::swatches::import(&bytes, t("Imported")) {
         Ok(list) => list,
         Err(error) => return Some(tf("Could not import palettes: {}", &[&t(&error)])),
     };

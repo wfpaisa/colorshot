@@ -78,7 +78,7 @@ impl Gnome {
     /// Frosted glass: el fondo de la ventana deja pasar lo que hay detrás (desenfocado por el
     /// compositor) con `tint` de color encima, oscurecido hacia el negro según `shade`. Barra y
     /// tarjetas van a medias sobre ese fondo, para que sigan destacando.
-    pub fn frosted(self, glass: Option<rapidshot_core::settings::Glass>) -> Self {
+    pub fn frosted(self, glass: Option<colorshot_core::settings::Glass>) -> Self {
         let Some(glass) = glass else {
             return self;
         };
@@ -152,7 +152,7 @@ pub fn apply_gnome(ctx: &Context, gnome: &Gnome) {
     ctx.set_style_of(theme, style);
 }
 pub fn apply(ctx: &Context) {
-    apply_fonts(ctx, rapidshot_core::i18n::current().cjk());
+    apply_fonts(ctx, colorshot_core::i18n::current().cjk());
     dark_style(ctx);
 }
 fn dark_style(ctx: &Context) {
@@ -277,7 +277,7 @@ fn font_definitions(cjk: bool) -> egui::FontDefinitions {
 
 // egui no trae ideogramas: Noto Sans CJK de la variante del idioma o lo que dé fontconfig.
 fn cjk_font() -> Option<egui::FontData> {
-    let japanese = rapidshot_core::i18n::current() == rapidshot_core::i18n::Language::Japanese;
+    let japanese = colorshot_core::i18n::current() == colorshot_core::i18n::Language::Japanese;
     let (family, lang) = if japanese {
         ("Noto Sans CJK JP", "ja")
     } else {

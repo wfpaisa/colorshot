@@ -141,7 +141,7 @@ impl Scan {
                 &format!(
                     "{}  {}{dots}",
                     regular::SCAN,
-                    rapidshot_core::i18n::t("Reading text / QR")
+                    colorshot_core::i18n::t("Reading text / QR")
                 ),
                 alpha,
             );
@@ -225,7 +225,7 @@ mod tests {
         let mut scan = Scan::new();
         let now = Instant::now();
         assert!(!scan.over(now + Duration::from_secs(60)));
-        scan.finish(true, rapidshot_core::i18n::t("Done"));
+        scan.finish(true, colorshot_core::i18n::t("Done"));
         assert!(!scan.over(Instant::now()));
         assert!(scan.over(Instant::now() + RESULT + Duration::from_millis(10)));
     }

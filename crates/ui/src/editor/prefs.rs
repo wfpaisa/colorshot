@@ -1,4 +1,4 @@
-//! Lo último elegido en cada herramienta, guardado en `~/.config/rapidshot/editor.ron`.
+//! Lo último elegido en cada herramienta, guardado en `~/.config/colorshot/editor.ron`.
 use super::{Tool, color, model::Style};
 use egui::Color32;
 use std::collections::BTreeMap;
@@ -44,7 +44,7 @@ pub fn default_style(tool: Tool) -> Style {
 }
 
 fn path() -> Option<std::path::PathBuf> {
-    Some(dirs::config_dir()?.join("rapidshot").join("editor.ron"))
+    Some(dirs::config_dir()?.join("colorshot").join("editor.ron"))
 }
 
 impl Prefs {

@@ -1,13 +1,13 @@
 //! Ventanas eframe: selector por monitor, miniatura y editor.
 use anyhow::Context as _;
 use eframe::egui::{self, ViewportBuilder, ViewportId};
-use rapidshot_core::i18n::{t, tf};
-use rapidshot_core::{
+use colorshot_core::i18n::{t, tf};
+use colorshot_core::{
     capture::{Capture, Rect},
     clipboard, monitors, recognize, save,
     settings::{EscAction, Format, Placement, Settings, ThumbnailMonitor},
 };
-use rapidshot_ui::{
+use colorshot_ui::{
     area_selector::{AreaSelector, SelectorResult},
     blur::Blur,
     editor::{Editor, EditorAction, model},
@@ -62,7 +62,7 @@ pub fn run_selector(
         use_x11(&mut options);
     }
     eframe::run_native(
-        "rapidshot",
+        "colorshot",
         options,
         Box::new(move |cc| {
             theme::apply(&cc.egui_ctx);
@@ -107,9 +107,9 @@ const BLANK: Duration = Duration::from_millis(40);
 /// Responding». eframe guarda el tamaño y la pantalla completa por nombre de aplicación: el
 /// editor heredaba la pantalla completa del selector.
 fn native(viewport: ViewportBuilder) -> eframe::NativeOptions {
-    // Un solo app_id para todas las ventanas: GNOME lo asocia a rapidshot.desktop y su icono.
-    let mut viewport = viewport.with_app_id("rapidshot");
-    if let Some(logo) = rapidshot_ui::icons::logo() {
+    // Un solo app_id para todas las ventanas: GNOME lo asocia a colorshot.desktop y su icono.
+    let mut viewport = viewport.with_app_id("colorshot");
+    if let Some(logo) = colorshot_ui::icons::logo() {
         viewport = viewport.with_icon(logo);
     }
     eframe::NativeOptions {
@@ -126,11 +126,11 @@ fn native(viewport: ViewportBuilder) -> eframe::NativeOptions {
 
 /// Zona de la captura en la pantalla, `x,y,w,h,ancho,alto` en píxeles de la captura completa;
 /// la pasa `flows::deliver` a la miniatura para elegir el monitor del puntero.
-pub const FROM: &str = "RAPIDSHOT_FROM";
+pub const FROM: &str = "COLORSHOT_FROM";
 /// Sitio del editor en puntos X11 (`x,y,ancho,alto`), centrado en el monitor de la miniatura.
-pub const AT: &str = "RAPIDSHOT_AT";
+pub const AT: &str = "COLORSHOT_AT";
 /// `1` si el proceso que capturó ya copió la imagen (ver `flows::deliver`).
-pub const COPIED: &str = "RAPIDSHOT_COPIED";
+pub const COPIED: &str = "COLORSHOT_COPIED";
 
 /// Tope del editor sin monitor conocido; con monitor, el 90 % de este.
 const EDITOR_MAX: egui::Vec2 = egui::vec2(1600., 1000.);
@@ -254,7 +254,7 @@ pub fn run_preview(runtime: &tokio::runtime::Runtime, temp: &Path) -> anyhow::Re
     log::info!("preview: monitors in {:?}", started.elapsed());
     let mut options = native(
         ViewportBuilder::default()
-            .with_title("rapidshot preview")
+            .with_title("colorshot preview")
             .with_inner_size(preview::MIN_WINDOW)
             .with_resizable(false)
             .with_decorations(false)
@@ -269,7 +269,7 @@ pub fn run_preview(runtime: &tokio::runtime::Runtime, temp: &Path) -> anyhow::Re
         use_x11(&mut options);
     }
     eframe::run_native(
-        "rapidshot preview",
+        "colorshot preview",
         options,
         Box::new(move |cc| {
             log::info!("preview: window in {:?}", started.elapsed());
@@ -495,7 +495,7 @@ impl PreviewApp {
             ctx.show_viewport_immediate(
                 ViewportId::from_hash_of(("flight", index)),
                 ViewportBuilder::default()
-                    .with_title("rapidshot flight")
+                    .with_title("colorshot flight")
                     .with_position(monitor.min)
                     .with_inner_size(monitor.size())
                     .with_decorations(false)
@@ -522,7 +522,7 @@ impl PreviewApp {
             .unwrap_or(0);
         let monitor = self.monitor(index, ppp);
         let image = egui::vec2(self.image.width() as f32, self.image.height() as f32);
-        let size = rapidshot_ui::editor::window_size(image, monitor.size() * 0.9);
+        let size = colorshot_ui::editor::window_size(image, monitor.size() * 0.9);
         transition::place(monitor, size, (0.5, 0.5), 0.)
     }
 }
@@ -641,7 +641,7 @@ pub fn run_scan(runtime: &tokio::runtime::Runtime, temp: &Path) -> anyhow::Resul
     let job = image.clone();
     let mut options = native(
         ViewportBuilder::default()
-            .with_title("rapidshot scan")
+            .with_title("colorshot scan")
             .with_inner_size(egui::vec2(
                 image.width().clamp(1, 600) as f32,
                 image.height().clamp(1, 400) as f32,
@@ -655,7 +655,7 @@ pub fn run_scan(runtime: &tokio::runtime::Runtime, temp: &Path) -> anyhow::Resul
     );
     use_x11(&mut options);
     eframe::run_native(
-        "rapidshot scan",
+        "colorshot scan",
         options,
         Box::new(move |cc| {
             theme::apply(&cc.egui_ctx);
@@ -675,7 +675,7 @@ pub fn run_scan(runtime: &tokio::runtime::Runtime, temp: &Path) -> anyhow::Resul
             });
             Ok(Box::new(ScanApp {
                 texture: scan_texture(&cc.egui_ctx, &image),
-                scan: rapidshot_ui::scan::Scan::new(),
+                scan: colorshot_ui::scan::Scan::new(),
                 area,
                 placed: false,
                 result,
@@ -710,7 +710,7 @@ fn scan_texture(ctx: &egui::Context, image: &image::RgbaImage) -> egui::TextureH
 
 struct ScanApp {
     texture: egui::TextureHandle,
-    scan: rapidshot_ui::scan::Scan,
+    scan: colorshot_ui::scan::Scan,
     // Zona en píxeles X; `None` si no se sabe dónde estaba (queda donde la ponga GNOME).
     area: Option<egui::Rect>,
     placed: bool,
@@ -777,7 +777,7 @@ pub fn overlay(
     place: Option<&Place>,
 ) -> ViewportBuilder {
     let builder = ViewportBuilder::default()
-        .with_title("rapidshot")
+        .with_title("colorshot")
         .with_decorations(false)
         .with_always_on_top()
         .with_transparent(transparent);
@@ -1026,9 +1026,9 @@ pub fn run_editor(capture: Capture) -> anyhow::Result<()> {
     let settings = Settings::load();
     let image = egui::vec2(capture.image.width() as f32, capture.image.height() as f32);
     let mut viewport = ViewportBuilder::default()
-        .with_title("rapidshot")
-        .with_inner_size(rapidshot_ui::editor::window_size(image, EDITOR_MAX))
-        .with_min_inner_size(rapidshot_ui::editor::MIN_WINDOW)
+        .with_title("colorshot")
+        .with_inner_size(colorshot_ui::editor::window_size(image, EDITOR_MAX))
+        .with_min_inner_size(colorshot_ui::editor::MIN_WINDOW)
         .with_decorations(false)
         .with_transparent(true);
     // Desde la miniatura: X11 y en el monitor de la miniatura.
@@ -1050,7 +1050,7 @@ pub fn run_editor(capture: Capture) -> anyhow::Result<()> {
         use_x11(&mut options);
     }
     eframe::run_native(
-        "rapidshot",
+        "colorshot",
         options,
         Box::new(move |cc| {
             theme::apply(&cc.egui_ctx);
@@ -1092,7 +1092,7 @@ struct EditorApp {
     finished: std::sync::mpsc::Receiver<(String, Option<bool>)>,
     running: usize,
     // Abierto desde la miniatura (otro proceso, sin token de activación): GNOME lo dejaría
-    // detrás con «rapidshot is ready»; en X11 Mutter acepta pedir el foco sin marca de tiempo.
+    // detrás con «colorshot is ready»; en X11 Mutter acepta pedir el foco sin marca de tiempo.
     // Se pide al tercer cuadro: winit lo ignora mientras eframe no muestra la ventana.
     focus: u8,
 }
@@ -1127,7 +1127,7 @@ impl eframe::App for EditorApp {
         let ctx = ui.ctx().clone();
         ui.set_opacity(transition::appear(&ctx));
         // Las herramientas van en la barra de título.
-        let (bar, body) = frame::toolbar(ui, &self.gnome, rapidshot_ui::editor::BAR, true);
+        let (bar, body) = frame::toolbar(ui, &self.gnome, colorshot_ui::editor::BAR, true);
         let mut inner = ui.new_child(egui::UiBuilder::new().max_rect(body));
         self.editor_ui(&mut inner, &ctx, bar.shrink2(egui::vec2(12., 0.)));
         frame::finish(ui, &self.gnome, true);
@@ -1215,7 +1215,7 @@ impl EditorApp {
     }
 }
 
-/// Lanza `rapidshot pin|edit <png>` en un proceso propio: cada ventana nueva necesita un
+/// Lanza `colorshot pin|edit <png>` en un proceso propio: cada ventana nueva necesita un
 /// bucle de eventos fresco (ver `main::spawn_child`). Si la imagen no está en disco (o fue
 /// editada), se escribe en el directorio de ejecución de la sesión.
 pub fn spawn(
@@ -1270,13 +1270,13 @@ pub fn run_pin(path: &std::path::Path) -> anyhow::Result<()> {
     let path = path.to_path_buf();
     let image = image::open(&path)?.into_rgba8();
     forget_temp(&path);
-    let size = rapidshot_ui::pin::scaled(
+    let size = colorshot_ui::pin::scaled(
         egui::vec2(image.width() as f32, image.height() as f32),
         1.,
         1200.,
     ) + egui::vec2(2., 2.);
     eframe::run_native(
-        "rapidshot pin",
+        "colorshot pin",
         native(
             ViewportBuilder::default()
                 .with_title("Pin")
@@ -1348,11 +1348,11 @@ pub fn run_preferences(runtime: &tokio::runtime::Runtime) -> anyhow::Result<()> 
         .unwrap_or_default();
     let gnome = theme::Gnome::current();
     eframe::run_native(
-        "rapidshot preferences",
+        "colorshot preferences",
         native(
             ViewportBuilder::default()
                 .with_title("Preferences")
-                .with_inner_size(rapidshot_ui::preferences::SIZE)
+                .with_inner_size(colorshot_ui::preferences::SIZE)
                 .with_resizable(false)
                 .with_decorations(false)
                 .with_transparent(true),
@@ -1372,12 +1372,12 @@ pub fn run_palettes() -> anyhow::Result<()> {
     let binary = crate::exe()?.display().to_string();
     let gnome = theme::Gnome::current();
     eframe::run_native(
-        "rapidshot palettes",
+        "colorshot palettes",
         native(
             ViewportBuilder::default()
                 .with_title("Color Palettes")
-                .with_inner_size(rapidshot_ui::palettes::SIZE)
-                .with_min_inner_size(rapidshot_ui::palettes::MIN_SIZE)
+                .with_inner_size(colorshot_ui::palettes::SIZE)
+                .with_min_inner_size(colorshot_ui::palettes::MIN_SIZE)
                 .with_decorations(false)
                 .with_transparent(true),
         ),

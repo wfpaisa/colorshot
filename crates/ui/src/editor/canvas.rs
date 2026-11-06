@@ -3,7 +3,7 @@ use super::*;
 use crate::theme::Tokens;
 use egui::{PointerButton, Pos2, Rect, Stroke, TextureOptions};
 use model::{Primitive, primitives};
-use rapidshot_core::i18n::t;
+use colorshot_core::i18n::t;
 impl Editor {
     fn fit(&mut self, rect: Rect) {
         self.zoom = ((rect.size() - Vec2::splat(32.)) / self.image_size())

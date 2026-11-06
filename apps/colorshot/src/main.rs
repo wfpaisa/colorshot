@@ -3,15 +3,15 @@ mod flows;
 mod instance;
 mod windows;
 
-use rapidshot_core::command::{Command, USAGE};
+use colorshot_core::command::{Command, USAGE};
 use std::sync::mpsc;
 
 fn main() -> anyhow::Result<()> {
     env_logger::init();
-    rapidshot_core::i18n::set(rapidshot_core::settings::Settings::load().language);
+    colorshot_core::i18n::set(colorshot_core::settings::Settings::load().language);
     let args: Vec<_> = std::env::args().skip(1).collect();
     if matches!(args.as_slice(), [flag] if flag == "--version" || flag == "-V") {
-        println!("rapidshot {}", env!("CARGO_PKG_VERSION"));
+        println!("colorshot {}", env!("CARGO_PKG_VERSION"));
         return Ok(());
     }
     let Some(command) = Command::parse(&args) else {
@@ -36,7 +36,7 @@ fn main() -> anyhow::Result<()> {
         return flows::run(&command, &runtime);
     }
     let (sender, commands) = mpsc::channel();
-    rapidshot_ui::tray::spawn(runtime.handle(), sender.clone());
+    colorshot_ui::tray::spawn(runtime.handle(), sender.clone());
     std::thread::spawn(move || {
         for stream in owner.listener.incoming().flatten() {
             if let Some(command) = instance::read(stream) {
@@ -72,7 +72,7 @@ pub fn exe() -> std::io::Result<std::path::PathBuf> {
 }
 
 /// Marca del proceso hijo que ejecuta una orden de la instancia residente.
-pub const CHILD: &str = "RAPIDSHOT_CHILD";
+pub const CHILD: &str = "COLORSHOT_CHILD";
 
 // Cada orden corre en su propio proceso. eframe reutiliza un único bucle de eventos: al
 // volver de una ventana nadie atiende la conexión Wayland, y la ventana cerrada puede
@@ -97,9 +97,9 @@ fn spawn_child(command: &Command) -> anyhow::Result<()> {
 pub fn notify_error(error: &anyhow::Error) {
     let _ = std::process::Command::new("notify-send")
         .args([
-            "--app-name=rapidshot",
-            "rapidshot",
-            rapidshot_core::i18n::t(&error.to_string()),
+            "--app-name=colorshot",
+            "colorshot",
+            colorshot_core::i18n::t(&error.to_string()),
         ])
         .spawn()
         .and_then(|mut child| child.wait());

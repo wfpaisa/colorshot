@@ -1,0 +1,6 @@
+{
+  "uuid": "colorshot@wfelipe.com",
+  "name": "ColorShot",
+  "description": "Gives colorshot the position of the open windows so it can capture one, lets the selector draw over the top bar and captures only the chosen area.",
+  "shell-version": ["45", "46", "47", "48", "49", "50", "51"]
+}

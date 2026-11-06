@@ -1,10 +1,10 @@
-//! Iconos SVG de `assets/icons`, instalados con `just icons` en ~/.local/share/rapidshot/icons
+//! Iconos SVG de `assets/icons`, instalados con `just icons` en ~/.local/share/colorshot/icons
 //! para editarlos sin recompilar. Si faltan, cada botón usa su glifo de Phosphor.
 use egui::{Button, RichText, TextureHandle};
 use std::path::PathBuf;
 
 pub fn dir() -> Option<PathBuf> {
-    Some(dirs::data_dir()?.join("rapidshot").join("icons"))
+    Some(dirs::data_dir()?.join("colorshot").join("icons"))
 }
 
 /// Icono de plantilla (`name.svg`) en blanco con su alfa, para teñirlo al pintar.
@@ -57,13 +57,13 @@ pub fn logo() -> Option<egui::IconData> {
 /// Logo pequeño (`assets/icons/logo.svg`, 24 px) a cuatro veces su tamaño, para la barra de
 /// Preferencias. Va en color, sin teñir.
 pub fn logo_texture(ctx: &egui::Context) -> Option<TextureHandle> {
-    let id = egui::Id::new("rapidshot-logo");
+    let id = egui::Id::new("colorshot-logo");
     if let Some(cached) = ctx.data(|d| d.get_temp::<Option<TextureHandle>>(id)) {
         return cached;
     }
     let texture = render(include_bytes!("../../../assets/icons/logo.svg"), 4.).map(|image| {
         ctx.load_texture(
-            "rapidshot-logo",
+            "colorshot-logo",
             egui::ColorImage::from_rgba_unmultiplied(
                 [image.width() as usize, image.height() as usize],
                 image.as_raw(),
@@ -119,7 +119,7 @@ pub fn glyph_png(glyph: &str, rgb: [u8; 3]) -> Option<Vec<u8>> {
 
 /// Textura del icono, cargada una vez por contexto.
 pub fn texture(ctx: &egui::Context, name: &str) -> Option<TextureHandle> {
-    let id = egui::Id::new(("rapidshot-icon", name));
+    let id = egui::Id::new(("colorshot-icon", name));
     if let Some(cached) = ctx.data(|d| d.get_temp::<Option<TextureHandle>>(id)) {
         return cached;
     }
@@ -161,7 +161,7 @@ pub fn button<'a>(
 mod tests {
     #[test]
     fn svg_se_dibuja_al_doble() {
-        let path = std::env::temp_dir().join("rapidshot-icon-test.svg");
+        let path = std::env::temp_dir().join("colorshot-icon-test.svg");
         std::fs::write(
             &path,
             r#"<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><rect x="4" y="4" width="8" height="8"/></svg>"#,

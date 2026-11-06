@@ -12,7 +12,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
 
 const IFACE = `<node>
-  <interface name="com.wfelipe.RapidShot">
+  <interface name="com.wfelipe.ColorShot">
     <method name="Windows">
       <arg type="a(iiii)" direction="out" name="frames"/>
     </method>
@@ -33,10 +33,10 @@ const KINDS = [
     Meta.WindowType.UTILITY,
 ];
 
-// El selector es una ventana «rapidshot» de tipo dock por monitor.
+// El selector es una ventana «colorshot» de tipo dock por monitor.
 function isSelector(window) {
     return window.get_window_type() === Meta.WindowType.DOCK &&
-        window.get_title() === 'rapidshot';
+        window.get_title() === 'colorshot';
 }
 
 // Proceso dueño de una conexión de D-Bus.
@@ -68,11 +68,11 @@ function screenshotArea(x, y, width, height, stream) {
     });
 }
 
-export default class RapidShot extends Extension {
+export default class ColorShot extends Extension {
     enable() {
         this._object = Gio.DBusExportedObject.wrapJSObject(IFACE, this);
-        this._object.export(Gio.DBus.session, '/com/wfelipe/RapidShot');
-        this._name = Gio.bus_own_name(Gio.BusType.SESSION, 'com.wfelipe.RapidShot',
+        this._object.export(Gio.DBus.session, '/com/wfelipe/ColorShot');
+        this._name = Gio.bus_own_name(Gio.BusType.SESSION, 'com.wfelipe.ColorShot',
             Gio.BusNameOwnerFlags.NONE, null, null, null);
 
         this._selectors = new Set();
@@ -150,7 +150,7 @@ export default class RapidShot extends Extension {
         try {
             const pid = await callerPid(invocation.get_sender());
             if (![...this._selectors].some(window => window.get_pid() === pid))
-                throw new Error('Only the open rapidshot selector can capture');
+                throw new Error('Only the open colorshot selector can capture');
             const stream = Gio.File.new_for_path(path)
                 .create(Gio.FileCreateFlags.PRIVATE, null);
             try {

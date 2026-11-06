@@ -4,7 +4,7 @@ use crate::icons;
 use crate::theme::Tokens;
 use egui::{Align2, FontId, Rect, Response, RichText, Sense, Stroke, Ui, pos2, vec2};
 use egui_phosphor::regular as icon;
-use rapidshot_core::i18n::{n, t, tf};
+use colorshot_core::i18n::{n, t, tf};
 
 const ICON: f32 = 18.;
 /// Fondo de la herramienta activa: una píldora gris.

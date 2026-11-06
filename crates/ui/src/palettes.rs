@@ -13,9 +13,9 @@ use egui::{
     pos2, vec2,
 };
 use egui_phosphor::regular as icon;
-use rapidshot_core::i18n::{t, tf};
-use rapidshot_core::palettes::{self, COLORS_MAX, Palette, Palettes, Rgb, Secondary, View};
-use rapidshot_core::settings::{Glass, Settings};
+use colorshot_core::i18n::{t, tf};
+use colorshot_core::palettes::{self, COLORS_MAX, Palette, Palettes, Rgb, Secondary, View};
+use colorshot_core::settings::{Glass, Settings};
 use std::sync::mpsc::Receiver;
 use std::time::{Duration, Instant, SystemTime};
 
@@ -481,7 +481,7 @@ impl PaletteWindow {
             // Como hijo de la instancia (`CHILD` en la app): corre aquí y no por el socket.
             let child = std::process::Command::new(binary)
                 .arg("color")
-                .env("RAPIDSHOT_CHILD", "1")
+                .env("COLORSHOT_CHILD", "1")
                 .stdout(std::process::Stdio::piped())
                 .spawn();
             let mut chosen = None;

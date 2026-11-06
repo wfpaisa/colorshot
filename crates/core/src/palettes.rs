@@ -1,4 +1,4 @@
-//! Paletas de colores en `~/.config/rapidshot/palettes.ron`: las guardadas, los últimos
+//! Paletas de colores en `~/.config/colorshot/palettes.ron`: las guardadas, los últimos
 //! colores del cuentagotas y las cuentas de tonos (más claro, más oscuro, gama de un color).
 use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
@@ -80,7 +80,7 @@ pub struct Palettes {
 }
 
 pub fn path() -> Option<PathBuf> {
-    Some(dirs::config_dir()?.join("rapidshot").join("palettes.ron"))
+    Some(dirs::config_dir()?.join("colorshot").join("palettes.ron"))
 }
 
 impl Palettes {

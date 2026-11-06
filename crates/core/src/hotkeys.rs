@@ -64,7 +64,7 @@ fn format_list(items: &[String]) -> String {
 }
 
 fn path(command: &str) -> String {
-    format!("{BASE}/rapidshot-{command}/")
+    format!("{BASE}/colorshot-{command}/")
 }
 
 fn unquote(value: &str) -> String {
@@ -87,7 +87,7 @@ pub fn installed() -> Result<Vec<Option<String>>, HotkeyError> {
         .collect()
 }
 
-/// Crea o actualiza las entradas `rapidshot-*` pedidas, cada una con su combinación
+/// Crea o actualiza las entradas `colorshot-*` pedidas, cada una con su combinación
 /// (`<Control><Alt>s`), sin tocar los demás atajos.
 pub fn install(binary: &str, bindings: &[(&str, String)]) -> Result<(), HotkeyError> {
     let mut list = parse_list(&gsettings(&["get", SCHEMA, "custom-keybindings"])?);
@@ -97,7 +97,7 @@ pub fn install(binary: &str, bindings: &[(&str, String)]) -> Result<(), HotkeyEr
         };
         let path = path(command);
         let item = format!("{ITEM}:{path}");
-        gsettings(&["set", &item, "name", &format!("rapidshot: {name}")])?;
+        gsettings(&["set", &item, "name", &format!("colorshot: {name}")])?;
         gsettings(&["set", &item, "command", &format!("{binary} {command}")])?;
         gsettings(&["set", &item, "binding", binding.as_str()])?;
         if !list.contains(&path) {
@@ -114,7 +114,7 @@ pub fn install_all(binary: &str) -> Result<(), HotkeyError> {
     install(binary, &bindings)
 }
 
-/// Quita una entrada `rapidshot-*` de la lista de GNOME y borra sus claves.
+/// Quita una entrada `colorshot-*` de la lista de GNOME y borra sus claves.
 pub fn remove(command: &str) -> Result<(), HotkeyError> {
     let path = path(command);
     let mut list = parse_list(&gsettings(&["get", SCHEMA, "custom-keybindings"])?);

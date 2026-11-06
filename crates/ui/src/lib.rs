@@ -1,4 +1,4 @@
-//! rapidshot-ui: interfaz egui (overlay de zona, editor, preferencias, bandeja).
+//! colorshot-ui: interfaz egui (overlay de zona, editor, preferencias, bandeja).
 pub mod area_selector;
 pub mod blur;
 pub mod editor;
