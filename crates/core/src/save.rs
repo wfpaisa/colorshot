@@ -56,6 +56,22 @@ pub fn purge_temp(age: std::time::Duration) {
     }
 }
 
+/// La imagen más reciente entre `dirs` (la carpeta de capturas y la temporal), para
+/// «Editar último».
+pub fn latest(dirs: &[PathBuf]) -> Option<PathBuf> {
+    dirs.iter()
+        .filter_map(|dir| std::fs::read_dir(dir).ok())
+        .flatten()
+        .flatten()
+        .filter(|e| {
+            let ext = e.path().extension().map(|x| x.to_ascii_lowercase());
+            ext.is_some_and(|x| ["png", "jpg", "jpeg", "webp"].contains(&x.to_str().unwrap_or("")))
+        })
+        .filter_map(|e| Some((e.metadata().ok()?.modified().ok()?, e.path())))
+        .max_by_key(|(time, _)| *time)
+        .map(|(_, path)| path)
+}
+
 pub fn default_dir() -> Result<PathBuf, SaveError> {
     Ok(dirs::picture_dir()
         .ok_or(SaveError::NoPictures)?
@@ -166,5 +182,18 @@ mod tests {
                 .starts_with("SCR-")
         );
         assert_eq!(image::open(path).unwrap().into_rgba8(), image);
+    }
+
+    #[test]
+    fn latest_picks_the_newest_image() {
+        let dir = tempfile::tempdir().unwrap();
+        let old = dir.path().join("a.png");
+        let new = dir.path().join("b.jpg");
+        std::fs::write(&old, b"").unwrap();
+        std::fs::write(dir.path().join("c.txt"), b"").unwrap();
+        std::thread::sleep(std::time::Duration::from_millis(20));
+        std::fs::write(&new, b"").unwrap();
+        let dirs = [dir.path().to_path_buf(), dir.path().join("missing")];
+        assert_eq!(super::latest(&dirs), Some(new));
     }
 }

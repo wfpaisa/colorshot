@@ -1,14 +1,15 @@
 //! Asistente de bienvenida: se abre la primera vez que arranca la instancia (y desde la
-//! bandeja). Explica la app, instala la extensión de GNOME, añade los atajos y el inicio
-//! automático, con las tarjetas y controles de Preferencias.
+//! bandeja). Explica la app, instala la extensión de GNOME, enseña el menú, añade los atajos
+//! y el inicio automático, con las tarjetas y controles de Preferencias.
 use crate::frame;
 use crate::preferences::{
-    BAR, OK, PAD, autostart_path, group, keycaps, pill, row, set_autostart, suggested, switch,
+    BAR, OK, PAD, after_capture, appearance, autostart_path, group, keycaps, language, pill, row,
+    saving, set_autostart, suggested, switch,
 };
 use crate::theme::Gnome;
 use colorshot_core::extensions::{self, State};
 use colorshot_core::hotkeys;
-use colorshot_core::i18n::{n, t, tf};
+use colorshot_core::i18n::{self, n, t, tf};
 use colorshot_core::settings::Settings;
 use egui::{Align2, Color32, FontId, Rect, RichText, Sense, Ui, vec2};
 use egui_phosphor::regular as icon;
@@ -23,16 +24,24 @@ const RECHECK: f64 = 3.;
 enum Step {
     Intro,
     Extension,
+    Menu,
     Shortcuts,
     Finish,
 }
 
 impl Step {
-    const ALL: [Self; 4] = [Self::Intro, Self::Extension, Self::Shortcuts, Self::Finish];
+    const ALL: [Self; 5] = [
+        Self::Intro,
+        Self::Extension,
+        Self::Menu,
+        Self::Shortcuts,
+        Self::Finish,
+    ];
     fn label(self) -> &'static str {
         match self {
             Self::Intro => t("Welcome"),
             Self::Extension => t("Extension"),
+            Self::Menu => t("Menu"),
             Self::Shortcuts => t("Shortcuts"),
             Self::Finish => t("Finish"),
         }
@@ -44,7 +53,12 @@ impl Step {
 
 pub struct Welcome {
     step: Step,
+    // Colores de GNOME; `gnome` es esta paleta con o sin vidrio esmerilado.
+    base: Gnome,
     gnome: Gnome,
+    // Desenfoque del fondo; `None` fuera de Wayland o si el compositor no lo ofrece.
+    blur: Option<crate::blur::Blur>,
+    blur_supported: bool,
     // Ruta del binario para los atajos, el inicio automático y abrir Preferencias.
     binary: String,
     status: Option<String>,
@@ -53,6 +67,8 @@ pub struct Welcome {
     appindicator: State,
     checked: f64,
     installed: Vec<Option<String>>,
+    // Lo que muestran los ajustes rápidos; se relee al cambiar de paso.
+    settings: Settings,
     // Al abrir o cambiar de paso, el contenido vuelve arriba (eframe recuerda el desplazamiento).
     top: bool,
 }
@@ -72,17 +88,27 @@ impl Welcome {
                 .and_then(|s| s.parse::<usize>().ok())
                 .and_then(|i| Step::ALL.get(i.wrapping_sub(1)).copied())
                 .unwrap_or(Step::Intro),
+            base: gnome,
             gnome,
+            blur: None,
+            blur_supported: false,
             binary,
             status: None,
             colorshot: State::Missing,
             appindicator: State::Missing,
             checked: 0.,
             installed: Vec::new(),
+            settings: Settings::default(),
             top: true,
         };
         welcome.refresh();
         welcome
+    }
+
+    /// Desenfoque de la ventana, creado con su `CreationContext`.
+    pub fn with_blur(mut self, blur: Option<crate::blur::Blur>) -> Self {
+        self.blur = blur;
+        self
     }
 
     fn refresh(&mut self) {
@@ -90,6 +116,7 @@ impl Welcome {
         self.appindicator = extensions::state(extensions::APPINDICATOR);
         self.installed =
             hotkeys::installed().unwrap_or_else(|_| vec![None; hotkeys::HOTKEYS.len()]);
+        self.settings = Settings::load();
     }
 
     fn go(&mut self, step: Step) {
@@ -102,6 +129,12 @@ impl Welcome {
     }
 
     pub fn ui(&mut self, ui: &mut Ui) {
+        self.blur_supported = self.blur.as_mut().is_some_and(|b| b.supported());
+        let glass = self.settings.glass().filter(|_| self.blur_supported);
+        self.gnome = self.base.frosted(glass);
+        if let Some(blur) = &mut self.blur {
+            blur.cover(ui.ctx(), glass.is_some());
+        }
         let g = self.gnome;
         let now = ui.input(|i| i.time);
         if self.step == Step::Extension && now - self.checked > RECHECK {
@@ -121,29 +154,29 @@ impl Welcome {
         if std::mem::take(&mut self.top) {
             scroll = scroll.vertical_scroll_offset(0.);
         }
-        scroll
-            .show(&mut page, |ui| {
-                egui::Frame::new()
-                    .inner_margin(egui::Margin {
-                        left: PAD as i8,
-                        right: PAD as i8,
-                        top: 10,
-                        bottom: 18,
-                    })
-                    .show(ui, |ui| {
-                        ui.spacing_mut().item_spacing = vec2(0., 0.);
-                        match self.step {
-                            Step::Intro => self.intro(ui),
-                            Step::Extension => self.extension(ui),
-                            Step::Shortcuts => self.shortcuts(ui),
-                            Step::Finish => self.finish(ui),
-                        }
-                        if let Some(status) = &self.status {
-                            ui.add_space(14.);
-                            ui.label(RichText::new(status).size(13.).color(g.dim));
-                        }
-                    });
-            });
+        scroll.show(&mut page, |ui| {
+            egui::Frame::new()
+                .inner_margin(egui::Margin {
+                    left: PAD as i8,
+                    right: PAD as i8,
+                    top: 10,
+                    bottom: 18,
+                })
+                .show(ui, |ui| {
+                    ui.spacing_mut().item_spacing = vec2(0., 0.);
+                    match self.step {
+                        Step::Intro => self.intro(ui),
+                        Step::Extension => self.extension(ui),
+                        Step::Menu => self.menu(ui),
+                        Step::Shortcuts => self.shortcuts(ui),
+                        Step::Finish => self.finish(ui),
+                    }
+                    if let Some(status) = &self.status {
+                        ui.add_space(14.);
+                        ui.label(RichText::new(status).size(13.).color(g.dim));
+                    }
+                });
+        });
         self.footer(ui, footer);
         frame::finish(ui, &g, false);
     }
@@ -253,7 +286,13 @@ impl Welcome {
                 self.go(Step::ALL[i + 1]);
             }
         }
-        if i > 0 && pill(&mut right, &g, &format!("{}  {}", icon::ARROW_LEFT, t("Back"))).clicked()
+        if i > 0
+            && pill(
+                &mut right,
+                &g,
+                &format!("{}  {}", icon::ARROW_LEFT, t("Back")),
+            )
+            .clicked()
         {
             self.go(Step::ALL[i - 1]);
         }
@@ -310,10 +349,7 @@ impl Welcome {
                     n("Read Text / QR"),
                     n("Select an area and its text or QR code is copied"),
                 ),
-                (
-                    n("Pick Color"),
-                    n("Click any pixel to copy its color"),
-                ),
+                (n("Pick Color"), n("Click any pixel to copy its color")),
                 (
                     n("Launcher menu"),
                     n("Right-click ColorShot in the dock or app grid for quick actions"),
@@ -328,10 +364,19 @@ impl Welcome {
 
     fn extension(&mut self, ui: &mut Ui) {
         let g = self.gnome;
+        ui.add_space(14.);
+        ui.label(
+            RichText::new(t("Activate the extension?"))
+                .size(20.)
+                .strong()
+                .color(g.text),
+        );
         paragraph(
             ui,
             &g,
-            t("GNOME on Wayland keeps apps from seeing other windows. The ColorShot extension gives ColorShot what it needs, and AppIndicator shows its tray icon."),
+            t(
+                "GNOME on Wayland keeps apps from seeing other windows. The ColorShot extension lets ColorShot take screenshots over the top bar, capture a single window and capture only the area you choose. AppIndicator shows its tray icon.",
+            ),
         );
         let mut action = None;
         group(ui, &g, t("ColorShot extension"), |ui| {
@@ -341,8 +386,13 @@ impl Welcome {
                 State::Disabled => t("Installed but turned off"),
                 State::Missing => t("Not installed"),
             };
-            row(ui, &g, t("ColorShot for GNOME Shell"), Some(subtitle), true, |ui| {
-                match self.colorshot {
+            row(
+                ui,
+                &g,
+                t("ColorShot for GNOME Shell"),
+                Some(subtitle),
+                true,
+                |ui| match self.colorshot {
                     State::Active | State::NeedsRelogin => ready(ui, self.colorshot),
                     State::Disabled => {
                         if suggested(ui, &g, t("Enable")).clicked() {
@@ -350,14 +400,18 @@ impl Welcome {
                         }
                     }
                     State::Missing => {
-                        if suggested(ui, &g, &format!("{}  {}", icon::DOWNLOAD_SIMPLE, t("Install")))
-                            .clicked()
+                        if suggested(
+                            ui,
+                            &g,
+                            &format!("{}  {}", icon::DOWNLOAD_SIMPLE, t("Install")),
+                        )
+                        .clicked()
                         {
                             action = Some(Action::Install);
                         }
                     }
-                }
-            });
+                },
+            );
             let uses = [
                 (n("Capture Window"), n("Pick any window with a click")),
                 (
@@ -381,8 +435,13 @@ impl Welcome {
                 State::Disabled => t("Installed but turned off"),
                 State::Missing => t("Needed to show the tray icon in GNOME"),
             };
-            row(ui, &g, t("AppIndicator support"), Some(subtitle), false, |ui| {
-                match self.appindicator {
+            row(
+                ui,
+                &g,
+                t("AppIndicator support"),
+                Some(subtitle),
+                false,
+                |ui| match self.appindicator {
                     State::Active | State::NeedsRelogin => ready(ui, self.appindicator),
                     State::Disabled => {
                         if suggested(ui, &g, t("Enable")).clicked() {
@@ -390,20 +449,26 @@ impl Welcome {
                         }
                     }
                     State::Missing => {
-                        if pill(ui, &g, &format!("{}  {}", icon::ARROW_SQUARE_OUT, t("Get it")))
-                            .clicked()
+                        if pill(
+                            ui,
+                            &g,
+                            &format!("{}  {}", icon::ARROW_SQUARE_OUT, t("Get it")),
+                        )
+                        .clicked()
                         {
                             action = Some(Action::Open(extensions::APPINDICATOR_URL));
                         }
                     }
-                }
-            });
+                },
+            );
         });
         if [self.colorshot, self.appindicator].contains(&State::NeedsRelogin) {
             paragraph(
                 ui,
                 &g,
-                t("GNOME loads new extensions the next time you log in. Everything else already works."),
+                t(
+                    "GNOME loads new extensions the next time you log in. Everything else already works.",
+                ),
             );
         }
         match action {
@@ -427,12 +492,92 @@ impl Welcome {
         }
     }
 
+    // El menú de la bandeja con números sobre la imagen y su leyenda al lado; debajo, los
+    // ajustes que más se cambian.
+    fn menu(&mut self, ui: &mut Ui) {
+        let g = self.gnome;
+        paragraph(
+            ui,
+            &g,
+            t(
+                "Everything starts from the ColorShot icon in the top bar. Open its menu to capture or reach any tool.",
+            ),
+        );
+        ui.add_space(14.);
+        let legend = [
+            (
+                n("ColorShot icon"),
+                n("In the top bar, next to the system icons"),
+            ),
+            (
+                n("Captures and tools"),
+                n("Screen, area, window, text / QR, color and palettes"),
+            ),
+            (
+                n("More"),
+                n("Repeat, delayed capture, default folder, edit last and this guide"),
+            ),
+            (
+                n("Preferences…"),
+                n("Turn options on or off and change the appearance"),
+            ),
+        ];
+        ui.horizontal_top(|ui| {
+            ui.spacing_mut().item_spacing = vec2(20., 0.);
+            if let Some(texture) = menu_texture(ui.ctx()) {
+                let size = texture.size_vec2() * (300. / texture.size_vec2().x);
+                let rect = ui
+                    .add(
+                        egui::Image::new(&texture)
+                            .fit_to_exact_size(size)
+                            .corner_radius(12),
+                    )
+                    .rect;
+                markers(ui, &g, rect, texture.size_vec2());
+            }
+            ui.vertical(|ui| {
+                ui.spacing_mut().item_spacing = vec2(0., 0.);
+                for (i, (title, subtitle)) in legend.into_iter().enumerate() {
+                    ui.add_space(if i == 0 { 6. } else { 16. });
+                    ui.horizontal_top(|ui| {
+                        ui.spacing_mut().item_spacing.x = 12.;
+                        let (rect, _) = ui.allocate_exact_size(vec2(22., 22.), Sense::hover());
+                        badge(ui.painter(), &g, rect.center(), i + 1);
+                        ui.vertical(|ui| {
+                            ui.label(RichText::new(t(title)).size(14.5).color(g.text));
+                            ui.add_space(2.);
+                            ui.label(RichText::new(t(subtitle)).size(13.).color(g.dim));
+                        });
+                    });
+                }
+            });
+        });
+        // Los mismos grupos que Preferencias; cada cambio se guarda en el momento porque la
+        // instancia y las demás ventanas leen el archivo.
+        let mut settings = self.settings.clone();
+        saving(ui, &g, &mut settings, &mut self.status);
+        after_capture(ui, &g, &mut settings);
+        appearance(ui, &g, &mut settings, self.blur_supported);
+        language(ui, &g, &mut settings);
+        if settings != self.settings {
+            if settings.language != self.settings.language {
+                i18n::set(settings.language);
+            }
+            if let Err(error) = settings.save() {
+                self.status = Some(error.to_string());
+            }
+            self.settings = settings;
+        }
+    }
+
     fn shortcuts(&mut self, ui: &mut Ui) {
         let g = self.gnome;
         paragraph(
             ui,
             &g,
-            t("Global shortcuts work from any app, even with no ColorShot window open. They are added to GNOME's keyboard settings."),
+            t(
+                "Global shortcuts work from any app, even with no ColorShot window open. They are added to GNOME's keyboard settings.",
+            ),
         );
         let missing = self.installed.iter().filter(|b| b.is_none()).count();
         let mut add_all = false;
@@ -479,8 +624,12 @@ impl Welcome {
                 Some(t("Opens Preferences on the Shortcuts page")),
                 false,
                 |ui| {
-                    if pill(ui, &g, &format!("{}  {}", icon::KEYBOARD, t("Open Shortcuts")))
-                        .clicked()
+                    if pill(
+                        ui,
+                        &g,
+                        &format!("{}  {}", icon::KEYBOARD, t("Open Shortcuts")),
+                    )
+                    .clicked()
                     {
                         self.status = open_preferences(&self.binary, "shortcuts").err();
                     }
@@ -557,12 +706,67 @@ fn ready(ui: &mut Ui, state: State) {
     let (glyph, text, color) = if state == State::Active {
         (icon::CHECK_CIRCLE, t("Active"), OK)
     } else {
-        (icon::CLOCK, t("After login"), Color32::from_rgb(246, 211, 45))
+        (
+            icon::CLOCK,
+            t("After login"),
+            Color32::from_rgb(246, 211, 45),
+        )
     };
     ui.label(
         RichText::new(format!("{glyph}  {text}"))
             .size(14.)
             .color(color),
+    );
+}
+
+/// Captura del menú de la bandeja (`docs/screenshots/menu.png`), cargada una vez.
+fn menu_texture(ctx: &egui::Context) -> Option<egui::TextureHandle> {
+    let id = egui::Id::new("colorshot-welcome-menu");
+    if let Some(cached) = ctx.data(|d| d.get_temp::<Option<egui::TextureHandle>>(id)) {
+        return cached;
+    }
+    let texture = image::load_from_memory(include_bytes!("../../../docs/screenshots/menu.png"))
+        .ok()
+        .map(|image| {
+            let image = image.into_rgba8();
+            ctx.load_texture(
+                "colorshot-welcome-menu",
+                egui::ColorImage::from_rgba_unmultiplied(
+                    [image.width() as usize, image.height() as usize],
+                    image.as_raw(),
+                ),
+                egui::TextureOptions::LINEAR,
+            )
+        });
+    ctx.data_mut(|d| d.insert_temp(id, texture.clone()));
+    texture
+}
+
+/// Números sobre la captura del menú; las posiciones van en píxeles de la imagen original.
+fn markers(ui: &Ui, g: &Gnome, rect: Rect, source: egui::Vec2) {
+    let scale = rect.width() / source.x;
+    let at = |x: f32, y: f32| rect.min + vec2(x, y) * scale;
+    let painter = ui.painter();
+    // El icono de la bandeja, rodeado; el resto, a la izquierda de su entrada.
+    painter.circle_stroke(at(260., 22.), 26. * scale, egui::Stroke::new(2., g.accent));
+    badge(painter, g, at(260., 22.) + vec2(24., 14.), 1);
+    painter.line_segment(
+        [at(122., 82.), at(122., 386.)],
+        egui::Stroke::new(2., g.accent),
+    );
+    badge(painter, g, at(122., 234.), 2);
+    badge(painter, g, at(122., 428.), 3);
+    badge(painter, g, at(122., 512.), 4);
+}
+
+fn badge(painter: &egui::Painter, g: &Gnome, center: egui::Pos2, number: usize) {
+    painter.circle_filled(center, 11., g.accent);
+    painter.text(
+        center,
+        Align2::CENTER_CENTER,
+        number.to_string(),
+        FontId::proportional(12.),
+        g.on_accent,
     );
 }
 

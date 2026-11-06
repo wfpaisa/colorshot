@@ -31,15 +31,21 @@
 - **Color picker** and a **color palette library**: save, reorder, generate shades and
   import / export Adobe Swatch Exchange (`.ase`) and GIMP (`.gpl`) files.
 - **Global shortcuts** registered in GNOME from the preferences window.
-- **Tray menu** with every action, a single resident instance and a CLI.
+- **Tray menu** with every action (**More** has repeat, delayed capture, **Default Folder** and
+  **Edit Last**, which opens the latest capture in the editor), a single resident instance and a
+  CLI.
 - Interface in English, Spanish, Portuguese, French, German, Russian, Chinese and Japanese.
 
 ## Screenshots
 
-| Color palettes | Preferences |
+| Tray menu | Color palettes |
 | --- | --- |
-| ![Color palettes](docs/screenshots/palettes.png) | ![General preferences](docs/screenshots/preferences-general.png) |
-| ![Global shortcuts](docs/screenshots/preferences-shortcuts.png) | ![Advanced preferences](docs/screenshots/preferences-advanced.png) |
+| ![Tray menu](docs/screenshots/menu.png) | ![Color palettes](docs/screenshots/palettes.png) |
+
+| Preferences | |
+| --- | --- |
+| ![General preferences](docs/screenshots/preferences-general.png) | ![Global shortcuts](docs/screenshots/preferences-shortcuts.png) |
+| ![Advanced preferences](docs/screenshots/preferences-advanced.png) | |
 
 ## Requirements
 
@@ -103,8 +109,8 @@ colorshot
 ```
 
 The first time it starts (right after `install.sh`), a welcome guide explains how ColorShot
-works, installs and enables the GNOME extension, adds the global shortcuts and turns on
-**Launch at startup**. Open it again from the tray menu (**More → Welcome Guide**) or with
+works, installs and enables the GNOME extension, shows the tray menu with quick settings, adds
+the global shortcuts and turns on **Launch at startup**. Open it again from the tray menu (**More → Welcome Guide**) or with
 `colorshot welcome`.
 
 Then use the tray menu, the global shortcuts (add them in **Preferences → Shortcuts**), the
@@ -112,7 +118,7 @@ launcher menu (right-click ColorShot in the dock or app grid) or the CLI:
 
 ```text
 colorshot [area | full | window | ocr | color | palettes | repeat | delayed |
-           clipboard | open | prefs | welcome | edit <file> | pin <file> | quit | --version]
+           clipboard | open | folder | last | prefs | welcome | edit <file> | pin <file> | quit | --version]
 ```
 
 | Default shortcut | Action |

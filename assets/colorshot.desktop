@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=colorshot
+Name=ColorShot
 Comment=Screenshots with annotations, OCR and pinning
 Comment[es]=Capturas de pantalla con anotaciones, OCR y fijado
 Exec=colorshot
@@ -9,7 +9,7 @@ Terminal=false
 Categories=Graphics;
 Keywords=screenshot;capture;ocr;annotate;
 StartupWMClass=colorshot
-Actions=area;full;window;ocr;color;palettes;clipboard;prefs;
+Actions=area;full;window;ocr;color;palettes;last;folder;prefs;
 
 [Desktop Action area]
 Name=Capture Area
@@ -77,16 +77,27 @@ Name[zh_CN]=调色板
 Name[ja]=カラーパレット
 Exec=colorshot palettes
 
-[Desktop Action clipboard]
-Name=Open from Clipboard
-Name[es]=Abrir del portapapeles
-Name[pt]=Carregar da área de transferência
-Name[fr]=Charger depuis le presse-papiers
-Name[de]=Aus Zwischenablage laden
-Name[ru]=Загрузить из буфера
-Name[zh_CN]=从剪贴板载入
-Name[ja]=クリップボードから読み込む
-Exec=colorshot clipboard
+[Desktop Action last]
+Name=Edit Last
+Name[es]=Editar último
+Name[pt]=Editar último
+Name[fr]=Modifier la dernière
+Name[de]=Letzte bearbeiten
+Name[ru]=Изменить последний
+Name[zh_CN]=编辑最近一张
+Name[ja]=最後の画像を編集
+Exec=colorshot last
+
+[Desktop Action folder]
+Name=Default Folder
+Name[es]=Carpeta por defecto
+Name[pt]=Pasta padrão
+Name[fr]=Dossier par défaut
+Name[de]=Standardordner
+Name[ru]=Папка по умолчанию
+Name[zh_CN]=默认文件夹
+Name[ja]=既定のフォルダー
+Exec=colorshot folder
 
 [Desktop Action prefs]
 Name=Preferences

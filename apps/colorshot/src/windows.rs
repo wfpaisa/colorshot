@@ -1384,7 +1384,8 @@ pub fn run_welcome() -> anyhow::Result<()> {
         Box::new(move |cc| {
             theme::apply_gnome(&cc.egui_ctx, &gnome);
             Ok(Box::new(WelcomeApp {
-                welcome: colorshot_ui::welcome::Welcome::new(binary, gnome),
+                welcome: colorshot_ui::welcome::Welcome::new(binary, gnome)
+                    .with_blur(Blur::new(cc)),
             }))
         }),
     )

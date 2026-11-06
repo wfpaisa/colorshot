@@ -88,6 +88,9 @@ impl Gnome {
             header: dark(self.header).gamma_multiply(0.5),
             card: dark(self.card).gamma_multiply(0.45),
             view: dark(self.view).gamma_multiply(0.5),
+            // Opacos, los bordes resaltan demasiado sobre el fondo translúcido.
+            line: self.line.gamma_multiply(0.4),
+            highlight: self.highlight.gamma_multiply(0.35),
             ..self
         }
     }

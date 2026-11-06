@@ -324,132 +324,9 @@ impl Preferences {
             monitors,
             ..
         } = self;
-        group(ui, &g, t("Language"), |ui| {
-            row(ui, &g, t("Interface language"), None, false, |ui| {
-                let options = Language::ALL.map(|l| (l, l.name().to_string()));
-                select(ui, &g, 190., &mut s.language, &options);
-            });
-        });
-        let blur = self.blur_supported;
-        group(ui, &g, t("Appearance"), |ui| {
-            let on = s.frosted_glass && blur;
-            row(
-                ui,
-                &g,
-                t("Frosted glass"),
-                Some(if blur {
-                    t("Blur what is behind the window")
-                } else {
-                    t("Background blur requires GNOME 51 or later")
-                }),
-                on,
-                |ui| {
-                    if !blur {
-                        ui.disable();
-                    }
-                    switch(ui, &g, &mut s.frosted_glass);
-                },
-            );
-            if on {
-                row(
-                    ui,
-                    &g,
-                    t("Background tint"),
-                    Some(t("Theme color over the blurred background")),
-                    true,
-                    |ui| {
-                        slider(ui, &g, &mut s.glass_tint, settings::GLASS_TINT);
-                    },
-                );
-                row(
-                    ui,
-                    &g,
-                    t("Tint darkness"),
-                    Some(t("Darken the background tint")),
-                    false,
-                    |ui| {
-                        slider(ui, &g, &mut s.glass_shade, (0, 100));
-                    },
-                );
-            }
-        });
-        group(ui, &g, t("Saving"), |ui| {
-            row(ui, &g, t("Screenshots folder"), None, true, |ui| {
-                let shown = s
-                    .save_dir()
-                    .map(|p| middle_ellipsis(&p.display().to_string(), 34))
-                    .unwrap_or_default();
-                let response = pill(ui, &g, &format!("{}  {shown}", icon::FOLDER))
-                    .on_hover_text(t("Click to choose a folder · Right-click to reset"));
-                if response.clicked()
-                    && let Some(dir) = pick_folder()
-                {
-                    s.save_dir = Some(dir.into());
-                }
-                if response.secondary_clicked() {
-                    s.save_dir = None;
-                }
-            });
-            row(
-                ui,
-                &g,
-                t("Format"),
-                Some(t("Auto uses JPEG for photo-like captures")),
-                false,
-                |ui| {
-                    segmented(
-                        ui,
-                        &g,
-                        &mut s.format,
-                        &[(Format::Png, "PNG"), (Format::Auto, t("Auto"))],
-                    );
-                },
-            );
-        });
-        // Las capturas sin guardar viven en la carpeta de la sesión (en memoria).
-        group(ui, &g, t("Temporary captures"), |ui| {
-            let keep = s.keep_temp;
-            let subtitle = if keep {
-                t("Unsaved captures stay in memory until you restart")
-            } else {
-                t("Unsaved captures are deleted when the thumbnail closes")
-            };
-            row(
-                ui,
-                &g,
-                t("Keep unsaved captures"),
-                Some(subtitle),
-                keep,
-                |ui| {
-                    switch(ui, &g, &mut s.keep_temp);
-                },
-            );
-            if !keep {
-                return;
-            }
-            let (count, bytes) = save::temp_usage();
-            let usage = match count {
-                0 => t("None yet").to_string(),
-                1 => tf("1 image · {}", &[&megabytes(bytes)]),
-                n => tf("{} images · {}", &[&n, &megabytes(bytes)]),
-            };
-            row(ui, &g, t("Temporary captures"), Some(&usage), false, |ui| {
-                if count > 0
-                    && icon_button(ui, &g, icon::TRASH)
-                        .on_hover_text(t("Delete all temporary captures"))
-                        .clicked()
-                {
-                    save::purge_temp(std::time::Duration::ZERO);
-                }
-                if pill(ui, &g, &format!("{}  {}", icon::FOLDER_OPEN, t("Show"))).clicked() {
-                    let dir = save::temp_dir();
-                    *status = std::fs::create_dir_all(&dir)
-                        .and_then(|()| std::process::Command::new("xdg-open").arg(&dir).spawn())
-                        .err()
-                        .map(|error| tf("Could not open the folder: {}", &[&error]));
-                }
-            });
-        });
+        language(ui, &g, s);
+        appearance(ui, &g, s, self.blur_supported);
+        saving(ui, &g, s, status);
         group(ui, &g, t("Capture Screen"), |ui| {
             let subtitle = match (monitors.len() > 1, s.screen_capture) {
                 (false, _) => t("Captures the whole screen"),
@@ -477,25 +354,7 @@ impl Preferences {
                 },
             );
         });
-        group(ui, &g, t("After capture"), |ui| {
-            row(ui, &g, t("Copy to clipboard"), None, true, |ui| {
-                switch(ui, &g, &mut s.copy_after_capture);
-            });
-            row(ui, &g, t("Save to folder"), None, true, |ui| {
-                switch(ui, &g, &mut s.save_after_capture);
-            });
-            row(ui, &g, t("After area capture, open"), None, false, |ui| {
-                segmented(
-                    ui,
-                    &g,
-                    &mut s.area_shows,
-                    &[
-                        (AreaShows::Thumbnail, t("Thumbnail")),
-                        (AreaShows::Editor, t("Editor")),
-                    ],
-                );
-            });
-        });
+        after_capture(ui, &g, s);
         // Apagada, la tarjeta se queda en el interruptor; encendida, muestra dónde y cuánto.
         group(ui, &g, t("Thumbnail"), |ui| {
             let shown = s.show_after_capture;
@@ -797,6 +656,168 @@ impl Preferences {
     }
 }
 
+// Grupos que comparten Preferencias y el asistente de bienvenida: mismos nombres y controles.
+
+pub(crate) fn language(ui: &mut Ui, g: &Gnome, s: &mut Settings) {
+    group(ui, g, t("Language"), |ui| {
+        row(ui, g, t("Interface language"), None, false, |ui| {
+            let options = Language::ALL.map(|l| (l, l.name().to_string()));
+            select(ui, g, 190., &mut s.language, &options);
+        });
+    });
+}
+
+/// Vidrio esmerilado; el tinte y la oscuridad solo se ven con él encendido.
+pub(crate) fn appearance(ui: &mut Ui, g: &Gnome, s: &mut Settings, blur: bool) {
+    group(ui, g, t("Appearance"), |ui| {
+        let on = s.frosted_glass && blur;
+        row(
+            ui,
+            g,
+            t("Frosted glass"),
+            Some(if blur {
+                t("Blur what is behind the window")
+            } else {
+                t("Background blur requires GNOME 51 or later")
+            }),
+            on,
+            |ui| {
+                if !blur {
+                    ui.disable();
+                }
+                switch(ui, g, &mut s.frosted_glass);
+            },
+        );
+        if on {
+            row(
+                ui,
+                g,
+                t("Background tint"),
+                Some(t("Theme color over the blurred background")),
+                true,
+                |ui| {
+                    slider(ui, g, &mut s.glass_tint, settings::GLASS_TINT);
+                },
+            );
+            row(
+                ui,
+                g,
+                t("Tint darkness"),
+                Some(t("Darken the background tint")),
+                false,
+                |ui| {
+                    slider(ui, g, &mut s.glass_shade, (0, 100));
+                },
+            );
+        }
+    });
+}
+
+/// Con «Guardar en la carpeta» cada captura va a la carpeta elegida; sin él, las capturas son
+/// temporales (en la carpeta de la sesión, en memoria) hasta que se guarden a mano.
+pub(crate) fn saving(ui: &mut Ui, g: &Gnome, s: &mut Settings, status: &mut Option<String>) {
+    group(ui, g, t("Saving"), |ui| {
+        let save = s.save_after_capture;
+        let subtitle = if save {
+            t("Every capture is saved as a file")
+        } else {
+            t("Captures stay temporary until you save them")
+        };
+        row(ui, g, t("Save to folder"), Some(subtitle), true, |ui| {
+            switch(ui, g, &mut s.save_after_capture);
+        });
+        if save {
+            row(ui, g, t("Screenshots folder"), None, true, |ui| {
+                let shown = s
+                    .save_dir()
+                    .map(|p| middle_ellipsis(&p.display().to_string(), 34))
+                    .unwrap_or_default();
+                let response = pill(ui, g, &format!("{}  {shown}", icon::FOLDER))
+                    .on_hover_text(t("Click to choose a folder · Right-click to reset"));
+                if response.clicked()
+                    && let Some(dir) = pick_folder()
+                {
+                    s.save_dir = Some(dir.into());
+                }
+                if response.secondary_clicked() {
+                    s.save_dir = None;
+                }
+            });
+        } else {
+            let keep = s.keep_temp;
+            let subtitle = if keep {
+                t("Unsaved captures stay in memory until you restart")
+            } else {
+                t("Unsaved captures are deleted when the thumbnail closes")
+            };
+            row(ui, g, t("Keep unsaved captures"), Some(subtitle), true, |ui| {
+                switch(ui, g, &mut s.keep_temp);
+            });
+            if keep {
+                let (count, bytes) = save::temp_usage();
+                let usage = match count {
+                    0 => t("None yet").to_string(),
+                    1 => tf("1 image · {}", &[&megabytes(bytes)]),
+                    n => tf("{} images · {}", &[&n, &megabytes(bytes)]),
+                };
+                row(ui, g, t("Temporary captures"), Some(&usage), true, |ui| {
+                    if count > 0
+                        && icon_button(ui, g, icon::TRASH)
+                            .on_hover_text(t("Delete all temporary captures"))
+                            .clicked()
+                    {
+                        save::purge_temp(std::time::Duration::ZERO);
+                    }
+                    if pill(ui, g, &format!("{}  {}", icon::FOLDER_OPEN, t("Show"))).clicked() {
+                        let dir = save::temp_dir();
+                        *status = std::fs::create_dir_all(&dir)
+                            .and_then(|()| {
+                                std::process::Command::new("xdg-open").arg(&dir).spawn()
+                            })
+                            .err()
+                            .map(|error| tf("Could not open the folder: {}", &[&error]));
+                    }
+                });
+            }
+        }
+        row(
+            ui,
+            g,
+            t("Format"),
+            Some(t("Auto uses JPEG for photo-like captures")),
+            false,
+            |ui| {
+                segmented(
+                    ui,
+                    g,
+                    &mut s.format,
+                    &[(Format::Png, "PNG"), (Format::Auto, t("Auto"))],
+                );
+            },
+        );
+    });
+}
+
+pub(crate) fn after_capture(ui: &mut Ui, g: &Gnome, s: &mut Settings) {
+    group(ui, g, t("After capture"), |ui| {
+        row(ui, g, t("Copy to clipboard"), None, true, |ui| {
+            switch(ui, g, &mut s.copy_after_capture);
+        });
+        row(ui, g, t("After area capture, open"), None, false, |ui| {
+            segmented(
+                ui,
+                g,
+                &mut s.area_shows,
+                &[
+                    (AreaShows::Thumbnail, t("Thumbnail")),
+                    (AreaShows::Editor, t("Editor")),
+                ],
+            );
+        });
+    });
+}
+
+
 /// Tarjeta de tablet-center: título en versalitas dentro y las filas debajo.
 pub(crate) fn group(ui: &mut Ui, g: &Gnome, title: &str, add: impl FnOnce(&mut Ui)) {
     ui.add_space(18.);
@@ -979,7 +1000,12 @@ fn slider(ui: &mut Ui, g: &Gnome, value: &mut u8, (min, max): (u8, u8)) -> egui:
 }
 
 /// Botones unidos en un campo; el elegido resalta como una tarjeta.
-fn segmented<T: Clone + PartialEq>(ui: &mut Ui, g: &Gnome, value: &mut T, options: &[(T, &str)]) {
+pub(crate) fn segmented<T: Clone + PartialEq>(
+    ui: &mut Ui,
+    g: &Gnome,
+    value: &mut T,
+    options: &[(T, &str)],
+) {
     let font = FontId::proportional(13.5);
     let widths: Vec<f32> = options
         .iter()
@@ -1035,7 +1061,7 @@ fn segmented<T: Clone + PartialEq>(ui: &mut Ui, g: &Gnome, value: &mut T, option
 }
 
 /// Lista desplegable con el aspecto de los demás controles.
-fn select<T: Clone + PartialEq>(
+pub(crate) fn select<T: Clone + PartialEq>(
     ui: &mut Ui,
     g: &Gnome,
     width: f32,
@@ -1523,7 +1549,7 @@ pub(crate) fn set_autostart(enabled: bool, binary: &str) -> Result<(), String> {
             std::fs::write(
                 &path,
                 format!(
-                    "[Desktop Entry]\nType=Application\nName=colorshot\nExec={binary}\n\
+                    "[Desktop Entry]\nType=Application\nName=ColorShot\nExec={binary}\n\
                      Icon=colorshot\nX-GNOME-Autostart-enabled=true\n"
                 ),
             )

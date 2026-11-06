@@ -139,11 +139,17 @@ impl ksni::Tray for Tray {
                     ),
                     self.item(t("Capture in 3 seconds"), "16-menu-timer", Command::Delayed),
                     MenuItem::Separator,
-                    self.item(t("Open File…"), "16-menu-file", Command::OpenFile),
-                    self.item(
-                        t("Open from Clipboard"),
-                        "16-menu-clipboard",
-                        Command::Clipboard,
+                    self.glyph_item(
+                        t("Default Folder"),
+                        "16-menu-folder",
+                        egui_phosphor::regular::FOLDER_OPEN,
+                        Command::Folder,
+                    ),
+                    self.glyph_item(
+                        t("Edit Last"),
+                        "16-menu-last",
+                        egui_phosphor::regular::PENCIL_SIMPLE,
+                        Command::Last,
                     ),
                     MenuItem::Separator,
                     self.glyph_item(

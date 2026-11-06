@@ -25,6 +25,10 @@ pub enum Command {
     /// Ventana para crear y editar paletas de colores.
     Palettes,
     OpenFile,
+    /// Abre la carpeta de capturas en el gestor de archivos.
+    Folder,
+    /// Abre en el editor la captura más reciente.
+    Last,
     Clipboard,
     Preferences,
     /// Asistente de bienvenida: extensión, atajos e inicio automático.
@@ -32,7 +36,7 @@ pub enum Command {
     Quit,
 }
 
-pub const USAGE: &str = "Usage: colorshot [area | full | window | ocr | color | palettes | repeat | delayed | clipboard | open | prefs | welcome | edit <file> | pin <file> | quit | --version]";
+pub const USAGE: &str = "Usage: colorshot [area | full | window | ocr | color | palettes | repeat | delayed | clipboard | open | folder | last | prefs | welcome | edit <file> | pin <file> | quit | --version]";
 
 impl Command {
     pub fn parse(args: &[String]) -> Option<Self> {
@@ -48,6 +52,8 @@ impl Command {
                 "color" => Self::Color,
                 "palettes" => Self::Palettes,
                 "open" => Self::OpenFile,
+                "folder" => Self::Folder,
+                "last" => Self::Last,
                 "clipboard" => Self::Clipboard,
                 "prefs" => Self::Preferences,
                 "welcome" => Self::Welcome,
@@ -74,6 +80,8 @@ impl Command {
             Self::Color => "color".into(),
             Self::Palettes => "palettes".into(),
             Self::OpenFile => "open".into(),
+            Self::Folder => "folder".into(),
+            Self::Last => "last".into(),
             Self::Clipboard => "clipboard".into(),
             Self::Preferences => "prefs".into(),
             Self::Welcome => "welcome".into(),
@@ -121,6 +129,8 @@ mod tests {
             Command::Color,
             Command::Palettes,
             Command::OpenFile,
+            Command::Folder,
+            Command::Last,
             Command::Clipboard,
             Command::Preferences,
             Command::Welcome,

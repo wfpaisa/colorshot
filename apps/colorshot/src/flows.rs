@@ -40,6 +40,26 @@ pub fn run(command: &Command, runtime: &Runtime) -> anyhow::Result<()> {
             Some(path) => run(&Command::Edit(path), runtime),
             None => Ok(()),
         },
+        Command::Folder => {
+            let dir = Settings::load().save_dir()?;
+            std::fs::create_dir_all(&dir)?;
+            std::process::Command::new("xdg-open")
+                .arg(&dir)
+                .spawn()
+                .with_context(|| {
+                    colorshot_core::i18n::tf("Could not open the folder: {}", &[&dir.display()])
+                })?;
+            Ok(())
+        }
+        // Sin pasar por `Edit`: la temporal no se borra, así se puede volver a abrir.
+        Command::Last => {
+            let dirs = [Settings::load().save_dir()?, save::temp_dir()];
+            let path = save::latest(&dirs).context(t("No captures yet"))?;
+            let image = image::open(&path)
+                .with_context(|| colorshot_core::i18n::tf("Could not open {}", &[&path.display()]))?
+                .into_rgba8();
+            windows::run_editor(Capture { image })
+        }
         Command::Clipboard => windows::run_editor(Capture {
             image: clipboard_image()?,
         }),
