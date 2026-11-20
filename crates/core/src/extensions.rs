@@ -6,7 +6,8 @@ use std::process::Command;
 pub const UUID: &str = "colorshot@wfelipe.com";
 /// Extensión que muestra los iconos de bandeja (StatusNotifierItem) en GNOME.
 pub const APPINDICATOR: &str = "appindicatorsupport@rgcjonas.gmail.com";
-pub const APPINDICATOR_URL: &str = "https://extensions.gnome.org/extension/615/appindicator-support/";
+pub const APPINDICATOR_URL: &str =
+    "https://extensions.gnome.org/extension/615/appindicator-support/";
 
 // La extensión va dentro del binario: el asistente la instala aunque se haya compilado a mano.
 const FILES: [(&str, &str); 2] = [
@@ -75,9 +76,12 @@ fn user_dir(uuid: &str) -> Option<PathBuf> {
 
 fn installed(uuid: &str) -> bool {
     user_dir(uuid).is_some_and(|d| d.join("metadata.json").is_file())
-        || ["/usr/share", "/usr/local/share"]
-            .iter()
-            .any(|base| PathBuf::from(base).join("gnome-shell/extensions").join(uuid).is_dir())
+        || ["/usr/share", "/usr/local/share"].iter().any(|base| {
+            PathBuf::from(base)
+                .join("gnome-shell/extensions")
+                .join(uuid)
+                .is_dir()
+        })
 }
 
 fn gsettings(args: &[&str]) -> std::io::Result<String> {
@@ -97,7 +101,13 @@ fn list(key: &str) -> Vec<String> {
 }
 
 fn set_list(key: &str, items: &[String]) -> std::io::Result<()> {
-    gsettings(&["set", "org.gnome.shell", key, &crate::hotkeys::format_list(items)]).map(drop)
+    gsettings(&[
+        "set",
+        "org.gnome.shell",
+        key,
+        &crate::hotkeys::format_list(items),
+    ])
+    .map(drop)
 }
 
 fn enabled(uuid: &str) -> bool {

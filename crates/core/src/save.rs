@@ -143,15 +143,28 @@ pub fn encode_fast(image: &image::RgbaImage) -> Result<Vec<u8>, SaveError> {
     encode_png(image, image::codecs::png::CompressionType::Fast)
 }
 
-// Con filtro adaptativo: el codificador por defecto no filtra y las capturas pesan el triple.
+/// PNG para guardar en temporales: rápido de escribir y de leer, sin importar el tamaño.
+pub fn save_png_fast(
+    image: &image::RgbaImage,
+    dir: impl AsRef<Path>,
+) -> Result<PathBuf, SaveError> {
+    save_bytes(&encode_fast(image)?, "png", dir)
+}
+
+// Con compresión rápida, el filtro adaptativo divide el tamaño por tres. Con la normal, sin
+// filtro las capturas (texto, colores planos) pesan menos y se codifican en la mitad de tiempo.
 fn encode_png(
     image: &image::RgbaImage,
     compression: image::codecs::png::CompressionType,
 ) -> Result<Vec<u8>, SaveError> {
-    use image::codecs::png::{FilterType, PngEncoder};
+    use image::codecs::png::{CompressionType, FilterType, PngEncoder};
+    let filter = match compression {
+        CompressionType::Fast => FilterType::Adaptive,
+        _ => FilterType::NoFilter,
+    };
     let mut out = Vec::new();
     image::ImageEncoder::write_image(
-        PngEncoder::new_with_quality(&mut out, compression, FilterType::Adaptive),
+        PngEncoder::new_with_quality(&mut out, compression, filter),
         image.as_raw(),
         image.width(),
         image.height(),

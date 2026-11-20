@@ -1,10 +1,10 @@
 //! Ventana a pantalla completa por monitor: marca una zona sobre el escritorio vivo (la captura
 //! se toma al soltar) o elige un color sobre una captura congelada.
 use crate::selection;
-use egui::{Color32, Context, CursorIcon, Pos2, Rect as UiRect, Stroke, StrokeKind, Vec2};
-use image::RgbaImage;
 use colorshot_core::capture::Rect;
 use colorshot_core::i18n::t;
+use egui::{Color32, Context, CursorIcon, Pos2, Rect as UiRect, Stroke, StrokeKind, Vec2};
+use image::RgbaImage;
 
 #[derive(Clone, Copy)]
 pub enum SelectorResult {

@@ -6,8 +6,6 @@
 use crate::editor::{color::Format as ColorFormat, prefs::Prefs as EditorPrefs};
 use crate::frame;
 use crate::theme::Gnome;
-use egui::{Align2, Color32, FontId, Rect, RichText, Sense, Stroke, Ui, vec2};
-use egui_phosphor::regular as icon;
 use colorshot_core::i18n::{self, Language, t, tf};
 use colorshot_core::{
     hotkeys,
@@ -18,6 +16,8 @@ use colorshot_core::{
         self, AreaShows, EscAction, Format, Placement, ScreenCapture, Settings, ThumbnailMonitor,
     },
 };
+use egui::{Align2, Color32, FontId, Rect, RichText, Sense, Stroke, Ui, vec2};
+use egui_phosphor::regular as icon;
 use std::path::PathBuf;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -750,9 +750,16 @@ pub(crate) fn saving(ui: &mut Ui, g: &Gnome, s: &mut Settings, status: &mut Opti
             } else {
                 t("Unsaved captures are deleted when the thumbnail closes")
             };
-            row(ui, g, t("Keep unsaved captures"), Some(subtitle), true, |ui| {
-                switch(ui, g, &mut s.keep_temp);
-            });
+            row(
+                ui,
+                g,
+                t("Keep unsaved captures"),
+                Some(subtitle),
+                true,
+                |ui| {
+                    switch(ui, g, &mut s.keep_temp);
+                },
+            );
             if keep {
                 let (count, bytes) = save::temp_usage();
                 let usage = match count {
@@ -771,9 +778,7 @@ pub(crate) fn saving(ui: &mut Ui, g: &Gnome, s: &mut Settings, status: &mut Opti
                     if pill(ui, g, &format!("{}  {}", icon::FOLDER_OPEN, t("Show"))).clicked() {
                         let dir = save::temp_dir();
                         *status = std::fs::create_dir_all(&dir)
-                            .and_then(|()| {
-                                std::process::Command::new("xdg-open").arg(&dir).spawn()
-                            })
+                            .and_then(|()| std::process::Command::new("xdg-open").arg(&dir).spawn())
                             .err()
                             .map(|error| tf("Could not open the folder: {}", &[&error]));
                     }
@@ -816,7 +821,6 @@ pub(crate) fn after_capture(ui: &mut Ui, g: &Gnome, s: &mut Settings) {
         });
     });
 }
-
 
 /// Tarjeta de tablet-center: título en versalitas dentro y las filas debajo.
 pub(crate) fn group(ui: &mut Ui, g: &Gnome, title: &str, add: impl FnOnce(&mut Ui)) {
@@ -1369,6 +1373,7 @@ fn layout_picker(ui: &mut Ui, g: &Gnome, monitors: &[Monitor], s: &mut Settings)
         width: 1920,
         height: 1080,
         primary: true,
+        fullscreen: false,
     }];
     let monitors = if monitors.is_empty() {
         &fallback[..]

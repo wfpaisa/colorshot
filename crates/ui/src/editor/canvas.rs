@@ -1,9 +1,9 @@
 //! Transformación del lienzo, gestos y vista previa vectorial.
 use super::*;
 use crate::theme::Tokens;
+use colorshot_core::i18n::t;
 use egui::{PointerButton, Pos2, Rect, Stroke, TextureOptions};
 use model::{Primitive, primitives};
-use colorshot_core::i18n::t;
 impl Editor {
     fn fit(&mut self, rect: Rect) {
         self.zoom = ((rect.size() - Vec2::splat(32.)) / self.image_size())
@@ -37,7 +37,7 @@ impl Editor {
         if self.revision != self.doc.revision {
             // Recorte, tamaño o deshacer: la imagen es otra.
             self.revision = self.doc.revision;
-            self.texture = None;
+            self.textures = [None, None];
             self.blur_cache.clear();
             self.fitted = false;
         }
@@ -90,32 +90,32 @@ impl Editor {
         });
         let image_rect =
             Rect::from_center_size(rect.center() + self.pan, self.image_size() * self.zoom);
-        let options = if self.zoom > 1. {
-            TextureOptions::NEAREST
-        } else {
-            TextureOptions::LINEAR
-        };
-        if self.texture_nearest != (self.zoom > 1.) {
-            self.texture = None;
-        }
-        self.texture_nearest = self.zoom > 1.;
-        if self.texture.is_none() {
+        let nearest = self.zoom > 1.;
+        let slot = usize::from(nearest);
+        if self.textures[slot].is_none() {
+            let options = if nearest {
+                TextureOptions::NEAREST
+            } else {
+                TextureOptions::LINEAR
+            };
             let max = ctx.input(|i| i.max_texture_side).max(1) as u32;
-            let shown = image::imageops::thumbnail(
-                &self.doc.image,
-                max.min(self.doc.image.width()).max(1),
-                max.min(self.doc.image.height()).max(1),
-            );
-            self.texture = Some(ctx.load_texture(
-                "editor-image",
+            let (w, h) = self.doc.image.dimensions();
+            // Reducir solo si la GPU no admite el tamaño: copiar una 4K cuesta ~90 ms.
+            let pixels = if w <= max && h <= max {
+                egui::ColorImage::from_rgba_unmultiplied(
+                    [w as usize, h as usize],
+                    self.doc.image.as_raw(),
+                )
+            } else {
+                let shown = image::imageops::thumbnail(&self.doc.image, max.min(w), max.min(h));
                 egui::ColorImage::from_rgba_unmultiplied(
                     [shown.width() as usize, shown.height() as usize],
                     shown.as_raw(),
-                ),
-                options,
-            ));
+                )
+            };
+            self.textures[slot] = Some(ctx.load_texture("editor-image", pixels, options));
         }
-        if let Some(texture) = &mut self.texture {
+        if let Some(texture) = &self.textures[slot] {
             painter.image(
                 texture.id(),
                 image_rect,

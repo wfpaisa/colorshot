@@ -6,7 +6,11 @@ mod windows;
 use colorshot_core::command::{Command, USAGE};
 use std::sync::mpsc;
 
+/// Inicio del proceso, para medir cuánto tarda en verse cada ventana (`RUST_LOG=info`).
+pub static STARTED: std::sync::OnceLock<std::time::Instant> = std::sync::OnceLock::new();
+
 fn main() -> anyhow::Result<()> {
+    STARTED.get_or_init(std::time::Instant::now);
     env_logger::init();
     colorshot_core::i18n::set(colorshot_core::settings::Settings::load().language);
     let args: Vec<_> = std::env::args().skip(1).collect();

@@ -1,6 +1,5 @@
 //! Ventanas eframe: selector por monitor, miniatura y editor.
 use anyhow::Context as _;
-use eframe::egui::{self, ViewportBuilder, ViewportId};
 use colorshot_core::i18n::{t, tf};
 use colorshot_core::{
     capture::{Capture, Rect},
@@ -19,6 +18,7 @@ use colorshot_ui::{
     tablet::Tablet,
     theme, transition,
 };
+use eframe::egui::{self, ViewportBuilder, ViewportId};
 use std::{
     path::{Path, PathBuf},
     sync::{Arc, Mutex},
@@ -57,6 +57,7 @@ pub fn run_selector(
     } else {
         Vec::new()
     };
+    log::info!("selector: run_native at {:?}", since_start());
     let mut options = native(overlay(0, multi, transparent, places.first()));
     if x11 {
         use_x11(&mut options);
@@ -65,7 +66,9 @@ pub fn run_selector(
         "colorshot",
         options,
         Box::new(move |cc| {
+            log::info!("selector: window at {:?}", since_start());
             theme::apply(&cc.egui_ctx);
+            log::info!("selector: fonts at {:?}", since_start());
             Ok(Box::new(SelectorApp {
                 tablet: Tablet::new(cc, &cc.egui_ctx),
                 selectors,
@@ -84,6 +87,13 @@ pub fn run_selector(
     selected
         .map(|(monitor, result, capture)| Ok((monitor, result, capture.transpose()?)))
         .transpose()
+}
+
+/// Tiempo desde que arrancó el proceso.
+pub fn since_start() -> Duration {
+    crate::STARTED
+        .get()
+        .map_or(Duration::ZERO, Instant::elapsed)
 }
 
 /// `Selected` mientras la captura puede haber fallado.
@@ -387,6 +397,12 @@ struct PreviewApp {
     // Tamaño pedido; XWayland ignora el inicial y hay que reclamarlo.
     size: egui::Vec2,
     results: std::sync::mpsc::Receiver<(preview::Status, Option<PathBuf>)>,
+    // Para el botón «Guardar»: otro guardado por el mismo canal.
+    sender: std::sync::mpsc::Sender<(preview::Status, Option<PathBuf>)>,
+    settings: Settings,
+    copied: bool,
+    // Pulsado «Guardar»: se cierra en cuanto el archivo queda guardado.
+    close_on_save: bool,
     screens: Vec<monitors::Screen>,
     target: Option<usize>,
     placement: Placement,
@@ -433,6 +449,7 @@ impl PreviewApp {
             (!find_cursor).then(|| screens.iter().position(|s| s.primary).unwrap_or(0))
         });
         let (sender, results) = std::sync::mpsc::channel();
+        let saver = sender.clone();
         let job = image.clone();
         let format = settings.format;
         let dir = settings.save_after_capture.then(|| settings.save_dir());
@@ -455,6 +472,10 @@ impl PreviewApp {
             keep_temp: settings.keep_temp,
             size: preview::window_size(size / ctx.pixels_per_point()),
             results,
+            sender: saver,
+            settings: settings.clone(),
+            copied,
+            close_on_save: false,
             screens,
             target,
             placement: settings.thumbnail_placement,
@@ -550,6 +571,13 @@ impl PreviewApp {
             ctx.send_viewport_cmd(egui::ViewportCommand::InnerSize(self.size));
         }
         while let Ok((status, saved)) = self.results.try_recv() {
+            match status {
+                preview::Status::Done { saved: true, .. } if self.close_on_save => {
+                    ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+                }
+                preview::Status::Failed(_) => self.close_on_save = false,
+                _ => {}
+            }
             self.preview.set_status(status);
             if let Some(path) = saved {
                 self.preview.path = path;
@@ -601,6 +629,17 @@ impl PreviewApp {
                     log::warn!("Could not open the editor: {error}");
                 }
                 ctx.send_viewport_cmd(egui::ViewportCommand::Close);
+            }
+            Some(PreviewAction::Save) => {
+                self.preview.set_status(preview::Status::Working);
+                self.close_on_save = true;
+                let (job, sender, repaint) = (self.image.clone(), self.sender.clone(), ctx.clone());
+                let (format, dir, copied) =
+                    (self.settings.format, self.settings.save_dir(), self.copied);
+                std::thread::spawn(move || {
+                    let _ = sender.send(save_only(&job, format, Some(dir), copied));
+                    repaint.request_repaint();
+                });
             }
             Some(PreviewAction::Pin) => {
                 self.temp_shared |= self.temp.as_ref() == Some(&self.preview.path);
@@ -782,6 +821,15 @@ pub fn overlay(
         .with_always_on_top()
         .with_transparent(transparent);
     match place {
+        // Mutter manda los docks al fondo en un monitor con una app a pantalla completa: ahí
+        // va a pantalla completa y siempre encima, sobre la app (la barra ya está oculta).
+        Some(place) if place.fullscreen => {
+            let window = place.window(place.guess);
+            builder
+                .with_position(window.min)
+                .with_inner_size(window.size())
+                .with_fullscreen(true)
+        }
         Some(place) => {
             let window = place.window(place.guess);
             builder
@@ -805,6 +853,8 @@ pub struct Place {
     monitor: egui::Rect,
     // Píxeles X por punto según Mutter, hasta que la ventana sepa el suyo.
     guess: f32,
+    // El monitor tiene una app a pantalla completa: la ventana lo cubre justo.
+    fullscreen: bool,
 }
 
 impl Place {
@@ -841,6 +891,14 @@ fn places(screens: &[monitors::Monitor], x11: &[monitors::XMonitor]) -> Vec<Plac
             egui::vec2(0., -guess),
             egui::vec2(-guess, 0.),
         ];
+        if m.fullscreen {
+            return Some(Place {
+                window: monitor,
+                monitor,
+                guess,
+                fullscreen: true,
+            });
+        }
         // Abajo, derecha, arriba, izquierda: el primero cuya franja no pisa otro monitor.
         let window = grow.into_iter().find_map(|g| {
             let window = egui::Rect::from_min_max(
@@ -855,6 +913,7 @@ fn places(screens: &[monitors::Monitor], x11: &[monitors::XMonitor]) -> Vec<Plac
             window,
             monitor,
             guess,
+            fullscreen: false,
         })
     };
     screens
@@ -1006,6 +1065,9 @@ impl eframe::App for SelectorApp {
     }
     fn ui(&mut self, ui: &mut egui::Ui, _frame: &mut eframe::Frame) {
         let ctx = ui.ctx().clone();
+        if ctx.cumulative_frame_nr() == 0 {
+            log::info!("selector: first frame at {:?}", since_start());
+        }
         for index in 1..self.sizes.len() {
             ctx.show_viewport_immediate(
                 ViewportId::from_hash_of(("monitor", index)),
@@ -1023,6 +1085,7 @@ impl eframe::App for SelectorApp {
 
 // Ventana decorada y acciones del editor sobre los píxeles originales.
 pub fn run_editor(capture: Capture) -> anyhow::Result<()> {
+    log::info!("editor: image loaded at {:?}", since_start());
     let settings = Settings::load();
     let image = egui::vec2(capture.image.width() as f32, capture.image.height() as f32);
     let mut viewport = ViewportBuilder::default()
@@ -1143,6 +1206,11 @@ impl eframe::App for EditorApp {
 impl EditorApp {
     fn editor_ui(&mut self, ui: &mut egui::Ui, ctx: &egui::Context, bar: egui::Rect) {
         let ctx = ctx.clone();
+        if ctx.cumulative_frame_nr() == 0 {
+            log::info!("editor: first frame at {:?}", since_start());
+        } else if ctx.cumulative_frame_nr() == 1 {
+            log::info!("editor: second frame at {:?}", since_start());
+        }
         if self.focus > 0 {
             self.focus -= 1;
             if self.focus == 0 {
@@ -1238,7 +1306,7 @@ pub fn spawn_at(
         None => {
             let dir = save::temp_dir();
             std::fs::create_dir_all(&dir)?;
-            save::save_png(image, dir)?
+            save::save_png_fast(image, dir)?
         }
     };
     let mut command = std::process::Command::new(crate::exe()?);
@@ -1498,6 +1566,7 @@ mod tests {
             width,
             height,
             primary: false,
+            fullscreen: false,
         };
         let x11 = |connector: &str, x, width, height| monitors::XMonitor {
             connector: connector.into(),

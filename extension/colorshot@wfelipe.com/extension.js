@@ -16,6 +16,9 @@ const IFACE = `<node>
     <method name="Windows">
       <arg type="a(iiii)" direction="out" name="frames"/>
     </method>
+    <method name="Fullscreen">
+      <arg type="a(ii)" direction="out" name="corners"/>
+    </method>
     <method name="Area">
       <arg type="i" direction="in" name="x"/>
       <arg type="i" direction="in" name="y"/>
@@ -33,10 +36,13 @@ const KINDS = [
     Meta.WindowType.UTILITY,
 ];
 
-// El selector es una ventana «colorshot» de tipo dock por monitor.
+// El selector es una ventana «colorshot» por monitor: un dock o, sobre un monitor con una
+// app a pantalla completa, una ventana a pantalla completa y siempre encima.
 function isSelector(window) {
-    return window.get_window_type() === Meta.WindowType.DOCK &&
-        window.get_title() === 'colorshot';
+    if (window.get_title() !== 'colorshot')
+        return false;
+    return window.get_window_type() === Meta.WindowType.DOCK ||
+        (window.is_fullscreen() && window.is_above());
 }
 
 // Proceso dueño de una conexión de D-Bus.
@@ -81,6 +87,14 @@ export default class ColorShot extends Extension {
             if (!isSelector(window))
                 return;
             this._selectors.add(window);
+            // Lanzado con un atajo, Mutter puede negarle el foco (y Esc no llega): el primer
+            // selector lo recibe en cuanto se muestra.
+            if (this._selectors.size === 1) {
+                window.connectObject('shown', () => {
+                    if (this._selectors.has(window) && !this._selectors.has(global.display.focus_window))
+                        Main.activateWindow(window);
+                }, this);
+            }
             window.connectObject('unmanaged', () => {
                 this._selectors.delete(window);
                 this._update();
@@ -162,6 +176,20 @@ export default class ColorShot extends Extension {
         } catch (e) {
             invocation.return_error_literal(Gio.DBusError, Gio.DBusError.FAILED, e.message);
         }
+    }
+
+    // Esquina de cada monitor con una ventana a pantalla completa: ahí Mutter pone los docks
+    // bajo las ventanas, así que el selector va a pantalla completa.
+    Fullscreen() {
+        const display = global.display;
+        const corners = [];
+        for (let i = 0; i < display.get_n_monitors(); i++) {
+            if (display.get_monitor_in_fullscreen(i)) {
+                const r = display.get_monitor_geometry(i);
+                corners.push([r.x, r.y]);
+            }
+        }
+        return corners;
     }
 
     // Marcos en coordenadas del escenario (lógicas), de la ventana de arriba a la de abajo.

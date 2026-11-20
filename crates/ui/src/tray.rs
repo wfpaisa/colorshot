@@ -1,11 +1,11 @@
 //! Icono de la bandeja con el menú de la app; cada entrada envía una orden a la instancia.
+use colorshot_core::command::Command;
+use colorshot_core::i18n::{self, t};
+use colorshot_core::settings::Settings;
 use ksni::{
     MenuItem, TrayMethods,
     menu::{StandardItem, SubMenu},
 };
-use colorshot_core::command::Command;
-use colorshot_core::i18n::{self, t};
-use colorshot_core::settings::Settings;
 use std::sync::mpsc::Sender;
 
 struct Tray {

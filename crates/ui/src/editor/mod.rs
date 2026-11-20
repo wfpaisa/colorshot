@@ -78,8 +78,9 @@ pub struct Editor {
     pub style: Style,
     pub zoom: f32,
     pub pan: Vec2,
-    texture: Option<TextureHandle>,
-    texture_nearest: bool,
+    /// Textura de la imagen con filtro lineal [0] y de vecino más cercano [1] (zoom > 1): se
+    /// guardan las dos para no volver a subir la imagen al cruzar el 100 %.
+    textures: [Option<TextureHandle>; 2],
     pub hover_pixel: Option<(u32, u32)>,
     pub drawing: Option<Shape>,
     anchor: Option<egui::Pos2>,
@@ -142,8 +143,7 @@ impl Editor {
             style: prefs.style(prefs.tool),
             zoom: 1.,
             pan: Vec2::ZERO,
-            texture: None,
-            texture_nearest: false,
+            textures: [None, None],
             hover_pixel: None,
             drawing: None,
             anchor: None,

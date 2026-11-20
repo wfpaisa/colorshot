@@ -12,6 +12,8 @@ pub struct Monitor {
     pub width: u32,
     pub height: u32,
     pub primary: bool,
+    /// Con una ventana a pantalla completa (según la extensión de GNOME).
+    pub fullscreen: bool,
 }
 
 type Props = HashMap<String, OwnedValue>;
@@ -62,9 +64,32 @@ pub async fn gnome_monitors() -> Result<Vec<Monitor>, ashpd::zbus::Error> {
             width: w.round() as u32,
             height: h.round() as u32,
             primary,
+            fullscreen: false,
         });
     }
+    // Sin la extensión (o con una versión anterior) ningún monitor cuenta como tal.
+    if let Ok(full) = gnome_fullscreen(&connection).await {
+        for monitor in &mut monitors {
+            monitor.fullscreen = full.contains(&(monitor.x, monitor.y));
+        }
+    }
     Ok(monitors)
+}
+
+/// Esquina (lógica) de los monitores con una ventana a pantalla completa, según la extensión.
+async fn gnome_fullscreen(
+    connection: &ashpd::zbus::Connection,
+) -> Result<Vec<(i32, i32)>, ashpd::zbus::Error> {
+    let reply = connection
+        .call_method(
+            Some("com.wfelipe.ColorShot"),
+            "/com/wfelipe/ColorShot",
+            Some("com.wfelipe.ColorShot"),
+            "Fullscreen",
+            &(),
+        )
+        .await?;
+    reply.body().deserialize()
 }
 
 /// Marco de cada ventana visible (x, y, ancho, alto en coordenadas lógicas), de la de arriba a
@@ -220,6 +245,7 @@ mod tests {
             width,
             height,
             primary: false,
+            fullscreen: false,
         }
     }
     #[test]

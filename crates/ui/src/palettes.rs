@@ -8,14 +8,14 @@ use crate::editor::color::Format;
 use crate::frame;
 use crate::theme;
 use crate::theme::Gnome;
+use colorshot_core::i18n::{t, tf};
+use colorshot_core::palettes::{self, COLORS_MAX, Palette, Palettes, Rgb, Secondary, View};
+use colorshot_core::settings::{Glass, Settings};
 use egui::{
     Align, Align2, Color32, CursorIcon, FontId, Id, Layout, Pos2, Rect, Sense, Stroke, Ui, Vec2,
     pos2, vec2,
 };
 use egui_phosphor::regular as icon;
-use colorshot_core::i18n::{t, tf};
-use colorshot_core::palettes::{self, COLORS_MAX, Palette, Palettes, Rgb, Secondary, View};
-use colorshot_core::settings::{Glass, Settings};
 use std::sync::mpsc::Receiver;
 use std::time::{Duration, Instant, SystemTime};
 

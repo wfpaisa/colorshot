@@ -1,8 +1,8 @@
 //! Miniatura flotante, acciones y cierre temporizado después de capturar.
 use crate::theme::Tokens;
+use colorshot_core::i18n::t;
 use egui::{self, TextureHandle};
 use egui_phosphor::regular;
-use colorshot_core::i18n::t;
 use std::{
     path::PathBuf,
     time::{Duration, Instant},
@@ -11,6 +11,7 @@ use std::{
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PreviewAction {
     Edit,
+    Save,
     Pin,
     Close,
 }
@@ -96,6 +97,14 @@ impl Preview {
     }
 
     /// Reinicia la cuenta atrás (al terminar la transición de entrada).
+    /// Ya está (o se está) guardando en la carpeta: sobra el botón de guardar.
+    pub fn saving_or_saved(&self) -> bool {
+        matches!(
+            self.status,
+            Status::Working | Status::Done { saved: true, .. }
+        )
+    }
+
     pub fn restart(&mut self) {
         self.started = Instant::now();
     }
@@ -223,11 +232,21 @@ impl Preview {
         );
     }
 
-    // Fijar y cerrar arriba a la derecha; el resto se hace en el editor.
+    // Guardar, fijar y cerrar arriba a la derecha; el resto se hace en el editor.
     fn actions(&self, ui: &mut egui::Ui, card: egui::Rect) -> Option<PreviewAction> {
         let mut action = None;
+        let save = (!self.saving_or_saved())
+            .then(|| (regular::FLOPPY_DISK, t("Save"), PreviewAction::Save));
+        let commands: Vec<_> = save
+            .into_iter()
+            .chain([
+                (regular::PUSH_PIN, t("Pin"), PreviewAction::Pin),
+                (regular::X, t("Close (Esc)"), PreviewAction::Close),
+            ])
+            .collect();
+        let n = commands.len() as f32;
         let buttons = egui::Rect::from_min_max(
-            card.right_top() + egui::vec2(-8. - 22. * 2. - 4., 6.),
+            card.right_top() + egui::vec2(-8. - 22. * n - 4. * (n - 1.), 6.),
             card.right_top() + egui::vec2(-8., 6. + 22.),
         );
         let mut row = ui.new_child(
@@ -236,10 +255,7 @@ impl Preview {
                 .layout(egui::Layout::left_to_right(egui::Align::Center)),
         );
         row.spacing_mut().item_spacing.x = 4.;
-        for (icon, tooltip, command) in [
-            (regular::PUSH_PIN, t("Pin"), PreviewAction::Pin),
-            (regular::X, t("Close (Esc)"), PreviewAction::Close),
-        ] {
+        for (icon, tooltip, command) in commands {
             if pill_button(&mut row, icon, tooltip).clicked() {
                 action = Some(command);
             }

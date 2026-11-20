@@ -1,7 +1,6 @@
 //! Cada orden de captura de principio a fin: capturar, elegir, entregar.
 use crate::windows;
 use anyhow::Context;
-use eframe::egui;
 use colorshot_core::i18n::t;
 use colorshot_core::{
     capture::{self, Capture, Rect},
@@ -13,6 +12,7 @@ use colorshot_core::{
     settings::{AreaShows, ScreenCapture, Settings},
 };
 use colorshot_ui::area_selector::{AreaSelector, SelectorResult};
+use eframe::egui;
 use std::sync::Arc;
 use tokio::runtime::{Handle, Runtime};
 
@@ -87,9 +87,13 @@ fn area(runtime: &Runtime) -> anyhow::Result<()> {
     Ok(())
 }
 
-/// Miniatura lanzada antes de capturar: crea su ventana mientras se elige la zona y recibe
-/// la captura por stdin (ver `windows::run_preview`). Si no llega, se cierra al soltarla.
-pub struct Warm(Option<std::process::Child>);
+/// Miniatura lanzada (desde otro hilo) antes de capturar: crea su ventana mientras se elige
+/// la zona y recibe la captura por stdin (ver `windows::run_preview`). Si no llega, se cierra al soltarla.
+pub struct Warm(Option<std::thread::JoinHandle<Option<std::process::Child>>>);
+
+// Lo que espera la miniatura para arrancar: así no compite con el selector por la GPU
+// mientras este crea su ventana, y aun así está lista antes de soltar la zona.
+const WARM_DELAY: std::time::Duration = std::time::Duration::from_millis(150);
 
 impl Warm {
     fn none() -> Self {
@@ -100,6 +104,13 @@ impl Warm {
         if !Settings::load().show_after_capture {
             return Self::none();
         }
+        Self(Some(std::thread::spawn(|| {
+            std::thread::sleep(WARM_DELAY);
+            Self::spawn()
+        })))
+    }
+
+    fn spawn() -> Option<std::process::Child> {
         let child = crate::exe().and_then(|exe| {
             std::process::Command::new(exe)
                 .args(["preview", "-"])
@@ -107,13 +118,9 @@ impl Warm {
                 .stdin(std::process::Stdio::piped())
                 .spawn()
         });
-        match child {
-            Ok(child) => Self(Some(child)),
-            Err(error) => {
-                log::warn!("Could not start the preview: {error}");
-                Self::none()
-            }
-        }
+        child
+            .inspect_err(|error| log::warn!("Could not start the preview: {error}"))
+            .ok()
     }
 
     fn send(
@@ -122,13 +129,12 @@ impl Warm {
         from: Option<From>,
         copied: bool,
     ) -> anyhow::Result<()> {
-        let mut child = match self.0.take() {
-            Some(child) => child,
-            None => Self::start()
-                .0
-                .take()
-                .context("Could not start the preview")?,
-        };
+        let mut child = self
+            .0
+            .take()
+            .and_then(|warm| warm.join().ok().flatten())
+            .or_else(Self::spawn)
+            .context("Could not start the preview")?;
         let mut stdin = child.stdin.take().context("preview without stdin")?;
         windows::write_delivery(&mut stdin, image, from, copied)?;
         Ok(())
@@ -137,7 +143,7 @@ impl Warm {
 
 impl Drop for Warm {
     fn drop(&mut self) {
-        if let Some(mut child) = self.0.take() {
+        if let Some(mut child) = self.0.take().and_then(|warm| warm.join().ok().flatten()) {
             let _ = child.kill();
             let _ = child.wait();
         }
@@ -159,7 +165,9 @@ fn screens(runtime: &Runtime) -> Vec<monitors::Monitor> {
 
 /// Se marca la zona sobre el escritorio vivo y se captura al soltar; `None` si se cancela.
 fn select(runtime: &Runtime) -> anyhow::Result<Option<windows::Shot>> {
+    log::info!("area: start at {:?}", windows::since_start());
     let screens = screens(runtime);
+    log::info!("area: monitors at {:?}", windows::since_start());
     let selectors = (0..screens.len().max(1))
         .map(|_| AreaSelector::area())
         .collect();
@@ -602,6 +610,7 @@ mod tests {
             width: 1920,
             height: 1200,
             primary: false,
+            fullscreen: false,
         };
         let zone = Rect {
             x: 101,
@@ -618,6 +627,7 @@ mod tests {
             width: 2560,
             height: 1440,
             primary: true,
+            fullscreen: false,
         };
         assert_eq!(bounds(&[primary, m]), (0, 0, 4480, 1440));
     }

@@ -19,11 +19,8 @@ pub fn copy_image(image: &RgbaImage) -> Result<(), arboard::Error> {
 }
 
 fn copy_with_wl_copy(image: &RgbaImage) -> std::io::Result<()> {
-    let mut png = Vec::new();
-    image
-        .write_to(&mut std::io::Cursor::new(&mut png), image::ImageFormat::Png)
-        .map_err(std::io::Error::other)?;
-    copy_png(&png)
+    // Compresión rápida: la normal tarda ~300 ms en una 4K y el portapapeles no la necesita.
+    copy_png(&crate::save::encode_fast(image).map_err(std::io::Error::other)?)
 }
 
 /// Copia un PNG ya codificado; en Wayland con wl-copy, si no, decodificándolo para arboard.
@@ -97,6 +94,6 @@ fn wait_briefly(child: &mut std::process::Child) -> std::io::Result<std::process
             let _ = child.wait();
             return Err(std::io::Error::other("wl-copy could not get the clipboard"));
         }
-        std::thread::sleep(std::time::Duration::from_millis(10));
+        std::thread::sleep(std::time::Duration::from_millis(2));
     }
 }

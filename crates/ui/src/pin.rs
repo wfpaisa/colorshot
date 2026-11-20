@@ -3,11 +3,11 @@
 //! de la ventana. Arrastrar mueve, los bordes redimensionan, la rueda cambia la opacidad y
 //! el clic derecho abre el menú.
 use crate::icons;
+use colorshot_core::i18n::t;
 use egui::{
     Align2, Color32, CursorIcon, FontId, Pos2, Rect, Sense, Stroke, StrokeKind, TextureHandle, Ui,
     Vec2, pos2, vec2,
 };
-use colorshot_core::i18n::t;
 use std::time::{Duration, Instant};
 
 #[derive(Clone, Copy, Debug, PartialEq)]

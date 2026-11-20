@@ -2,8 +2,8 @@
 use super::toolbar::{ACTIVE, Face, PANEL, PANEL_LINE, info, segmented};
 use super::*;
 use crate::theme::Tokens;
-use egui::{Align2, FontId, Painter, Pos2, Rect, RichText, Sense, Stroke, Ui, pos2, vec2};
 use colorshot_core::i18n::t;
+use egui::{Align2, FontId, Painter, Pos2, Rect, RichText, Sense, Stroke, Ui, pos2, vec2};
 
 /// Azul de los botones principales y del selector, el de macOS en el video.
 const BLUE: Color32 = Color32::from_rgb(10, 110, 230);
