@@ -4,20 +4,22 @@
 #   ./release.sh            bump the patch version (0.1.0 -> 0.1.1)
 #   ./release.sh 0.2.0      release that version
 #
-# Bumps the version in Cargo.toml, runs the tests and builds the portable archive with
-# `just release` (needs Docker). Then, after asking, commits, pushes and creates the GitHub
-# release with `gh`. If anything fails before pushing, Cargo.toml and Cargo.lock are restored.
+# Bumps the version in Cargo.toml, runs the tests and builds the portable archive and the
+# AppImage with `just release` (needs Docker and appimagetool). Then, after asking, commits,
+# pushes and creates the GitHub release with `gh`. If anything fails before pushing,
+# Cargo.toml and Cargo.lock are restored.
 set -euo pipefail
 
 REPO="wfpaisa/colorshot"
 ASSET="dist/colorshot-x86_64-linux.tar.gz"
+APPIMAGE="dist/ColorShot-x86_64.AppImage"
 
 info() { printf '\033[1;34m::\033[0m %s\n' "$*"; }
 die() { printf '\033[1;31mxx\033[0m %s\n' "$*" >&2; exit 1; }
 
 cd "$(dirname "$0")"
 
-for tool in git gh just docker cargo; do
+for tool in git gh just docker cargo appimagetool; do
     command -v "$tool" >/dev/null || die "Missing $tool"
 done
 gh auth status >/dev/null 2>&1 || die "Not logged in to GitHub: run gh auth login"
@@ -51,9 +53,10 @@ cargo update --workspace --offline --quiet
 info "Running tests"
 cargo test --workspace --offline --quiet
 
-info "Building the portable archive (Docker)"
+info "Building the portable archive (Docker) and the AppImage"
 just release
 [[ -f "$ASSET" && -f "$ASSET.sha256" ]] || die "just release did not produce $ASSET"
+[[ -f "$APPIMAGE" && -f "$APPIMAGE.sha256" ]] || die "just release did not produce $APPIMAGE"
 
 read -rp "Commit, push and publish $tag? [y/N] " answer
 [[ "$answer" == [yY]* ]] || die "Cancelled; nothing was published"
@@ -64,7 +67,7 @@ trap - EXIT
 git push --quiet origin main
 
 info "Creating the GitHub release"
-gh release create "$tag" "$ASSET" "$ASSET.sha256" \
+gh release create "$tag" "$ASSET" "$ASSET.sha256" "$APPIMAGE" "$APPIMAGE.sha256" \
     --repo "$REPO" --target main --title "ColorShot $tag" --generate-notes
 
 info "Done: https://github.com/$REPO/releases/tag/$tag"

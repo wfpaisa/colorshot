@@ -54,3 +54,21 @@ release:
     tar -C dist -czf dist/colorshot-x86_64-linux.tar.gz colorshot
     (cd dist && sha256sum colorshot-x86_64-linux.tar.gz > colorshot-x86_64-linux.tar.gz.sha256)
     objdump -T "$out/colorshot" | grep -oE 'GLIBC_[0-9.]+' | sort -Vu | tail -1
+    just appimage
+
+# AppImage en dist/ con el binario de `just release` (solo enlaza glibc: no lleva bibliotecas).
+appimage:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    command -v appimagetool >/dev/null || { echo "Falta appimagetool"; exit 1; }
+    app=target/AppDir
+    rm -rf "$app" && mkdir -p "$app/usr/bin" "$app/usr/share/colorshot/icons"
+    install -m755 dist/colorshot/colorshot "$app/usr/bin/"
+    install -m644 dist/colorshot/icons/*.svg "$app/usr/share/colorshot/icons/"
+    install -m644 assets/colorshot.desktop "$app/"
+    install -m644 assets/logo.svg "$app/colorshot.svg"
+    ln -s usr/bin/colorshot "$app/AppRun"
+    file=dist/ColorShot-x86_64.AppImage
+    ARCH=x86_64 appimagetool --no-appstream "$app" "$file" >/dev/null
+    (cd dist && sha256sum ColorShot-x86_64.AppImage > ColorShot-x86_64.AppImage.sha256)
+    ls -lh "$file"

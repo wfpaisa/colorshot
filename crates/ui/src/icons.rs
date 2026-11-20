@@ -10,7 +10,11 @@ pub(crate) const SMOOTH: egui::TextureOptions = egui::TextureOptions {
     ..egui::TextureOptions::LINEAR
 };
 
+/// Dentro de una AppImage, los que lleva consigo (`APPDIR`).
 pub fn dir() -> Option<PathBuf> {
+    if let Some(app) = std::env::var_os("APPDIR") {
+        return Some(PathBuf::from(app).join("usr/share/colorshot/icons"));
+    }
     Some(dirs::data_dir()?.join("colorshot").join("icons"))
 }
 

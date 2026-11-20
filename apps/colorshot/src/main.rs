@@ -67,6 +67,15 @@ fn main() -> anyhow::Result<()> {
     Ok(())
 }
 
+/// Ruta para atajos e inicio automático: dentro de una AppImage, la propia AppImage
+/// (`APPIMAGE`), porque el binario montado desaparece al cerrarse.
+pub fn launcher() -> std::io::Result<std::path::PathBuf> {
+    match std::env::var_os("APPIMAGE") {
+        Some(path) => Ok(path.into()),
+        None => exe(),
+    }
+}
+
 /// Ruta del binario para lanzar hijos. Si se reinstaló con la instancia viva, Linux añade
 /// « (deleted)» a la ruta vieja: se usa la nueva, que está en el mismo sitio.
 pub fn exe() -> std::io::Result<std::path::PathBuf> {

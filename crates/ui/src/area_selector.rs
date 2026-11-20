@@ -31,7 +31,7 @@ enum Mode {
     // Ventana transparente: se ve el escritorio tal cual.
     Area,
     Color {
-        image: RgbaImage,
+        image: Option<RgbaImage>,
         texture: Option<egui::TextureHandle>,
         // Nivel de zoom de la lupa (índice de `LOUPE`) y rueda acumulada hacia el siguiente.
         zoom: usize,
@@ -75,9 +75,15 @@ impl AreaSelector {
     }
     /// Cuentagotas sobre la captura del monitor.
     pub fn color(image: RgbaImage) -> Self {
+        let mut selector = Self::color_pending();
+        selector.set_image(image);
+        selector
+    }
+    /// Cuentagotas vacío mientras se captura el escritorio.
+    pub fn color_pending() -> Self {
         Self {
             mode: Mode::Color {
-                image,
+                image: None,
                 texture: None,
                 zoom: 0,
                 scroll: 0.,
@@ -88,6 +94,13 @@ impl AreaSelector {
             selection: None,
             drag: None,
             screen: None,
+        }
+    }
+    /// Entrega la captura; la textura se sube al dibujar este mismo cuadro.
+    pub fn set_image(&mut self, pixels: RgbaImage) {
+        if let Mode::Color { image, texture, .. } = &mut self.mode {
+            *image = Some(pixels);
+            *texture = None;
         }
     }
     /// Con clic derecho, el cuentagotas pasa el color a `keep` y sigue abierto.
@@ -122,7 +135,7 @@ impl AreaSelector {
         }
     }
     pub fn transparent(&self) -> bool {
-        !matches!(self.mode, Mode::Color { .. })
+        !matches!(self.mode, Mode::Color { image: Some(_), .. })
     }
     /// Zona de la ventana que ocupa el monitor, en puntos.
     pub fn set_screen(&mut self, screen: UiRect) {
@@ -138,7 +151,9 @@ impl AreaSelector {
     }
     pub fn ui(&mut self, ctx: &Context) -> Option<SelectorResult> {
         ctx.set_cursor_icon(match self.mode {
-            Mode::Screen { .. } | Mode::Window(_) => CursorIcon::Default,
+            Mode::Screen { .. } | Mode::Window(_) | Mode::Color { image: None, .. } => {
+                CursorIcon::Default
+            }
             _ => CursorIcon::Crosshair,
         });
         if ctx.input(|i| i.key_pressed(egui::Key::Escape)) {
@@ -277,6 +292,7 @@ impl AreaSelector {
         else {
             return None;
         };
+        let image = image.as_ref()?;
         let bounds = image.dimensions();
         if bounds.0 == 0 || bounds.1 == 0 {
             return Some(SelectorResult::Cancelled);
@@ -811,6 +827,67 @@ mod tests {
             Some(SelectorResult::All)
         ));
     }
+    #[test]
+    fn pending_color_stays_empty_until_the_image_arrives() {
+        let ctx = Context::default();
+        let mut selector = AreaSelector::color_pending();
+        assert!(selector.transparent());
+        let p = egui::pos2(40., 30.);
+        let mut result = None;
+        let mut output = ctx.run_ui(
+            egui::RawInput {
+                screen_rect: Some(UiRect::from_min_size(Pos2::ZERO, Vec2::new(400., 300.))),
+                events: vec![
+                    egui::Event::PointerMoved(p),
+                    button(p, true),
+                    button(p, false),
+                ],
+                ..Default::default()
+            },
+            |ui| result = selector.ui(ui.ctx()),
+        );
+        assert!(result.is_none());
+        assert!(output.shapes.is_empty());
+        assert_eq!(output.platform_output.cursor_icon, CursorIcon::Default);
+        output.textures_delta.clear();
+        selector.set_image(RgbaImage::from_pixel(
+            400,
+            300,
+            image::Rgba([12, 34, 56, 255]),
+        ));
+        let mut output = ctx.run_ui(egui::RawInput::default(), |ui| {
+            assert!(selector.ui(ui.ctx()).is_none());
+        });
+        assert!(!output.textures_delta.set.is_empty());
+        assert!(
+            output
+                .shapes
+                .iter()
+                .any(|shape| matches!(shape.shape, egui::Shape::Mesh(_)))
+        );
+        output.textures_delta.clear();
+    }
+
+    #[test]
+    fn pending_color_can_be_cancelled() {
+        let ctx = Context::default();
+        let mut selector = AreaSelector::color_pending();
+        assert!(matches!(
+            frame(
+                &ctx,
+                &mut selector,
+                vec![egui::Event::Key {
+                    key: egui::Key::Escape,
+                    physical_key: None,
+                    pressed: true,
+                    repeat: false,
+                    modifiers: Default::default(),
+                }]
+            ),
+            Some(SelectorResult::Cancelled)
+        ));
+    }
+
     #[test]
     fn color_click_picks_the_pixel() {
         let ctx = Context::default();

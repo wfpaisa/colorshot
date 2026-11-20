@@ -41,6 +41,18 @@ pub fn run_selector(
     screens: &[monitors::Monitor],
     grab: Option<Grab>,
 ) -> anyhow::Result<Option<Selected>> {
+    run_selector_freeze(selectors, screens, grab, None)
+}
+
+/// Captura los monitores con los selectores todavía vacíos.
+pub type Freeze = Arc<dyn Fn() -> anyhow::Result<Vec<image::RgbaImage>> + Send + Sync>;
+
+pub fn run_selector_freeze(
+    selectors: Vec<AreaSelector>,
+    screens: &[monitors::Monitor],
+    grab: Option<Grab>,
+    freeze: Option<Freeze>,
+) -> anyhow::Result<Option<Selected>> {
     let result = Arc::new(Mutex::new(None));
     let output = result.clone();
     let sizes: Vec<_> = screens
@@ -79,6 +91,11 @@ pub fn run_selector(
                 output,
                 grab,
                 grabbing: None,
+                freezing: freeze.map(|capture| Freezing {
+                    capture,
+                    since: None,
+                    incoming: None,
+                }),
             }))
         }),
     )
@@ -104,6 +121,12 @@ struct Grabbing {
     since: Instant,
     started: bool,
     done: Arc<Mutex<Option<anyhow::Result<Shot>>>>,
+}
+
+struct Freezing {
+    capture: Freeze,
+    since: Option<Instant>,
+    incoming: Option<std::sync::mpsc::Receiver<anyhow::Result<Vec<image::RgbaImage>>>>,
 }
 
 // Lo que se deja pasar para que el compositor muestre las ventanas ya vacías.
@@ -934,6 +957,7 @@ pub struct SelectorApp {
     output: Arc<Mutex<Option<Pending>>>,
     grab: Option<Grab>,
     grabbing: Option<Grabbing>,
+    freezing: Option<Freezing>,
     // Lápiz de tableta en Wayland (solo en la ventana del primer monitor): con la imitación
     // de ratón de GNOME el cursor desaparece a los pocos segundos.
     tablet: Option<Tablet>,
@@ -1011,6 +1035,41 @@ impl SelectorApp {
         }
     }
 
+    fn freeze(&mut self, ctx: &egui::Context) {
+        let Some(freezing) = &mut self.freezing else {
+            return;
+        };
+        let since = freezing.since.get_or_insert_with(Instant::now);
+        if freezing.incoming.is_none() && since.elapsed() >= BLANK {
+            let (sender, incoming) = std::sync::mpsc::channel();
+            freezing.incoming = Some(incoming);
+            let (capture, repaint) = (freezing.capture.clone(), ctx.clone());
+            std::thread::spawn(move || {
+                let _ = sender.send(capture());
+                repaint.request_repaint();
+            });
+        }
+        if let Some(result) = freezing.incoming.as_ref().and_then(|r| r.try_recv().ok()) {
+            match result {
+                Ok(images) => {
+                    for (selector, image) in self.selectors.iter_mut().zip(images) {
+                        selector.set_image(image);
+                    }
+                }
+                Err(error) => {
+                    if let Ok(mut output) = self.output.lock() {
+                        *output = Some((0, SelectorResult::Cancelled, Some(Err(error))));
+                    }
+                    ctx.send_viewport_cmd_to(ViewportId::ROOT, egui::ViewportCommand::Close);
+                }
+            }
+            self.freezing = None;
+            ctx.request_repaint();
+        } else {
+            ctx.request_repaint_after(FRAME);
+        }
+    }
+
     // Vacías las ventanas, captura en otro hilo y cierra al tenerla.
     fn grab(&mut self, ctx: &egui::Context) {
         let (Some(grabbing), Some(grab)) = (&mut self.grabbing, &self.grab) else {
@@ -1051,12 +1110,8 @@ impl SelectorApp {
 }
 
 impl eframe::App for SelectorApp {
-    fn clear_color(&self, visuals: &egui::Visuals) -> [f32; 4] {
-        if self.transparent {
-            [0.; 4]
-        } else {
-            visuals.panel_fill.to_normalized_gamma_f32()
-        }
+    fn clear_color(&self, _visuals: &egui::Visuals) -> [f32; 4] {
+        [0.; 4]
     }
     fn raw_input_hook(&mut self, ctx: &egui::Context, raw: &mut egui::RawInput) {
         if let Some(tablet) = &mut self.tablet {
@@ -1068,6 +1123,7 @@ impl eframe::App for SelectorApp {
         if ctx.cumulative_frame_nr() == 0 {
             log::info!("selector: first frame at {:?}", since_start());
         }
+        self.freeze(&ctx);
         for index in 1..self.sizes.len() {
             ctx.show_viewport_immediate(
                 ViewportId::from_hash_of(("monitor", index)),
@@ -1077,7 +1133,9 @@ impl eframe::App for SelectorApp {
         }
         self.frame(&ctx, 0);
         self.grab(&ctx);
-        if let Some(tablet) = &self.tablet {
+        if self.freezing.is_none()
+            && let Some(tablet) = &self.tablet
+        {
             tablet.cursor(&ctx);
         }
     }
@@ -1410,7 +1468,7 @@ impl eframe::App for PinApp {
 }
 
 pub fn run_preferences(runtime: &tokio::runtime::Runtime) -> anyhow::Result<()> {
-    let binary = crate::exe()?.display().to_string();
+    let binary = crate::launcher()?.display().to_string();
     let monitors = runtime
         .block_on(monitors::gnome_monitors())
         .unwrap_or_default();
@@ -1437,7 +1495,7 @@ pub fn run_preferences(runtime: &tokio::runtime::Runtime) -> anyhow::Result<()> 
 }
 /// Asistente de bienvenida, del tamaño de Preferencias.
 pub fn run_welcome() -> anyhow::Result<()> {
-    let binary = crate::exe()?.display().to_string();
+    let binary = crate::launcher()?.display().to_string();
     let gnome = theme::Gnome::current();
     eframe::run_native(
         "colorshot welcome",
@@ -1644,6 +1702,7 @@ mod tests {
             output: Arc::default(),
             grab: None,
             grabbing: None,
+            freezing: None,
             tablet: None,
         };
         // winit puede listar primero el monitor pequeño.

@@ -293,14 +293,24 @@ fn to_capture(r: Rect, size: (u32, u32), screen: Rect) -> Rect {
 
 /// Cuentagotas sobre una captura congelada: copia el color en el formato del editor.
 fn pick_color(runtime: &Runtime) -> anyhow::Result<()> {
-    let capture = runtime.block_on(capture::capture_full())?;
     let screens = screens(runtime);
-    let selectors = monitors::layout(&screens, capture.image.dimensions())
-        .iter()
-        .map(|r| AreaSelector::color(capture.crop(*r)).keeping(std::sync::Arc::new(keep_color)))
-        .collect();
+    let (selectors, freeze) = if std::env::var_os("DISPLAY").is_some() {
+        let selectors = (0..screens.len().max(1))
+            .map(|_| AreaSelector::color_pending().keeping(Arc::new(keep_color)))
+            .collect();
+        let (runtime, screens) = (runtime.handle().clone(), screens.clone());
+        let freeze: windows::Freeze = Arc::new(move || freeze_colors(&runtime, &screens));
+        (selectors, Some(freeze))
+    } else {
+        let images = portal_colors(runtime.handle(), &screens)?;
+        let selectors = images
+            .into_iter()
+            .map(|image| AreaSelector::color(image).keeping(Arc::new(keep_color)))
+            .collect();
+        (selectors, None)
+    };
     if let Some((_, SelectorResult::Color(rgb), _)) =
-        windows::run_selector(selectors, &screens, None)?
+        windows::run_selector_freeze(selectors, &screens, None, freeze)?
     {
         let text = colorshot_ui::editor::color_text(rgb);
         clipboard::copy_text(&text)?;
@@ -313,6 +323,38 @@ fn pick_color(runtime: &Runtime) -> anyhow::Result<()> {
             .and_then(|mut child| child.wait());
     }
     Ok(())
+}
+
+fn freeze_colors(
+    runtime: &Handle,
+    screens: &[monitors::Monitor],
+) -> anyhow::Result<Vec<image::RgbaImage>> {
+    if !screens.is_empty() {
+        let images: anyhow::Result<Vec<_>> = screens
+            .iter()
+            .enumerate()
+            .map(|(index, monitor)| {
+                let (w, h) = (monitor.width, monitor.height);
+                zone(runtime, screens, index, Rect { x: 0, y: 0, w, h }, (w, h)).map(|shot| shot.0)
+            })
+            .collect();
+        match images {
+            Ok(images) => return Ok(images),
+            Err(error) => log::info!("Color capture unavailable ({error:#}); using the portal"),
+        }
+    }
+    portal_colors(runtime, screens)
+}
+
+fn portal_colors(
+    runtime: &Handle,
+    screens: &[monitors::Monitor],
+) -> anyhow::Result<Vec<image::RgbaImage>> {
+    let capture = runtime.block_on(capture::capture_full())?;
+    Ok(monitors::layout(screens, capture.image.dimensions())
+        .into_iter()
+        .map(|rect| capture.crop(rect))
+        .collect())
 }
 
 fn save_picked(rgb: palettes::Rgb) {
