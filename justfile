@@ -69,6 +69,7 @@ appimage:
     install -m644 assets/logo.svg "$app/colorshot.svg"
     ln -s usr/bin/colorshot "$app/AppRun"
     file=dist/ColorShot-x86_64.AppImage
-    ARCH=x86_64 appimagetool --no-appstream "$app" "$file" >/dev/null
+    # Su salida (incluida la invitación a publicarla en su catálogo) solo se muestra si falla.
+    log=$(ARCH=x86_64 appimagetool --no-appstream "$app" "$file" 2>&1) || { echo "$log"; exit 1; }
     (cd dist && sha256sum ColorShot-x86_64.AppImage > ColorShot-x86_64.AppImage.sha256)
     ls -lh "$file"
